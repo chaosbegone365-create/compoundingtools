@@ -1,0 +1,44 @@
+/* Additive navigation layer: all calculator/layout rules remain owned by their pages. */
+#cyf-navigation-shell{font-family:'DM Sans',system-ui,sans-serif;color:#142b2a;line-height:1.5}
+#cyf-navigation-shell *{box-sizing:border-box}
+#cyf-sidebar{background:#f7f8f5;border-right:1px solid #e2eae5;padding:24px 16px;width:248px;position:fixed;inset:0 auto 0 0;overflow-y:auto;overscroll-behavior:contain;z-index:50;scroll-padding:16px}
+.cyf-sidebar-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:22px;font-family:Manrope,system-ui,sans-serif;font-weight:800;font-size:14px;letter-spacing:-.02em}
+#cyf-sidebar nav{display:block}
+#cyf-sidebar a{display:block;padding:10px 12px;margin:3px 0;border-radius:9px;color:#36554c;text-decoration:none;font-size:13px;font-weight:600;line-height:1.45;overflow-wrap:anywhere}
+#cyf-sidebar a:hover{background:#e9f0eb;color:#087f65}
+#cyf-sidebar a[aria-current="page"]{background:#e1efe7;color:#075e4d;font-weight:800;box-shadow:inset 3px 0 #087f65}
+#cyf-sidebar details{border-bottom:1px solid #e2eae5;padding:5px 0}
+#cyf-sidebar summary{padding:12px 6px;cursor:pointer;font-size:13px;font-weight:800;color:#142b2a;list-style:revert}
+#cyf-sidebar summary::marker{color:#087f65}
+.cyf-category-links{padding:0 0 8px 8px;border-left:1px solid #d6e5dc;margin-left:6px}
+#cyf-sidebar .cyf-sidebar-about{border-top:1px solid #e2eae5;margin-top:24px;padding-top:12px}
+.cyf-sidebar-note{font-size:12px;color:#637572;padding:6px 12px;line-height:1.7}
+.cyf-menu-close,.cyf-menu-toggle{display:none}
+.cyf-nav-backdrop[hidden]{display:none!important}
+@media(min-width:1200px){body:has(#cyf-navigation-shell){padding-left:248px}body:has(#cyf-navigation-shell)>header{padding-left:24px!important;padding-right:24px!important;flex-wrap:wrap}body:has(#cyf-navigation-shell)>header nav{flex-wrap:wrap}}
+@media(max-width:1199px){
+ /* Without JS, the complete semantic navigation remains available in normal flow. */
+ #cyf-sidebar{position:relative;width:100%;border-right:0;border-bottom:1px solid #e2eae5}
+ .cyf-nav-ready #cyf-sidebar{position:fixed;inset:0 auto 0 0;width:min(320px,calc(100vw - 40px));height:100dvh;visibility:hidden;transform:translateX(-101%);z-index:102}
+ .cyf-nav-ready.cyf-nav-open #cyf-sidebar{visibility:visible;transform:none}
+ .cyf-nav-ready .cyf-menu-toggle{display:flex;align-items:center;gap:9px;position:fixed;bottom:max(18px,env(safe-area-inset-bottom));right:18px;z-index:40;border:1px solid #d6e5dc;background:#142b2a;color:#fff;border-radius:99px;padding:13px 18px;min-height:48px;font:700 14px 'DM Sans',system-ui,sans-serif;box-shadow:0 6px 24px #142b2a29;cursor:pointer}
+ .cyf-nav-ready .cyf-menu-close{display:block;min-width:44px;min-height:44px;border:1px solid #d6e5dc;border-radius:10px;background:#fff;color:#142b2a;font-size:25px;cursor:pointer}
+ .cyf-nav-ready .cyf-nav-backdrop:not([hidden]){position:fixed;inset:0;background:#10292380;z-index:101}
+ body.cyf-nav-ready{padding-bottom:88px}
+}
+@media(prefers-reduced-motion:no-preference){.cyf-nav-ready #cyf-sidebar{transition:transform .15s ease}}
+@media print{#cyf-navigation-shell{display:none!important}body:has(#cyf-navigation-shell){padding-left:0;padding-bottom:0}}
+/* Category routes stay one click away; the drawer provides detailed tool links. */
+.cyf-category-shortcuts{display:none}
+@media(max-width:1199px){
+ #cyf-navigation-shell .cyf-category-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:12px 18px;background:#f7f8f5;border-bottom:1px solid #e2eae5}
+ .cyf-category-shortcuts a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:40px;padding:8px 5px;border:1px solid #d6e5dc;border-radius:9px;background:#fff;color:#36554c;text-decoration:none;text-align:center;font:700 12px/1.35 'DM Sans',system-ui,sans-serif;overflow-wrap:break-word}
+ .cyf-category-shortcuts a:hover,.cyf-category-shortcuts a[aria-current="page"]{background:#e1efe7;color:#075e4d}
+ /* Scoped homepage compression keeps search visible without removing the growth preview. */
+ body:has(#tool-search-form) .hero{padding-top:24px!important;padding-bottom:40px!important;min-height:0!important}
+ body:has(#tool-search-form) .hero h1{font-size:clamp(2rem,7vw,3.4rem)!important;margin-top:12px!important;margin-bottom:12px!important}
+ body:has(#tool-search-form) .hero h3{font-size:1rem!important;margin:10px 0!important}
+ body:has(#tool-search-form) .hero p{font-size:14px!important;line-height:1.6!important;margin-top:10px!important}
+ body:has(#tool-search-form) .hero-search{margin-top:18px!important}
+}
+@media(min-width:700px) and (max-width:1199px){#cyf-navigation-shell .cyf-category-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}}

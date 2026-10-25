@@ -1,0 +1,21 @@
+const {test,expect}=require('@playwright/test');
+test('fictional-family band loads one local responsive variant without replacing tools',async({page})=>{
+ const images=[];page.on('request',r=>{if(r.url().includes('family-life-illustration-'))images.push(r.url());});
+ await page.route('**/*',r=>new URL(r.request().url()).origin==='http://127.0.0.1:4173'?r.continue():r.abort());
+ await page.goto('/');
+ await expect(page.locator('#site-search')).toBeVisible();
+ await expect(page.locator('#preview-value')).not.toBeEmpty();
+ const band=page.locator('.cyf-life-context'),img=band.locator('img');
+ await expect(band).toHaveCount(1);
+ await expect(img).toHaveAttribute('alt','Illustration of a multigenerational family sharing a picnic.');
+ await expect(img).toHaveAttribute('loading','lazy');
+ await expect(band.locator('figcaption')).toHaveText('AI-generated illustration of a fictional family, not customers.');
+ await img.scrollIntoViewIfNeeded();
+ await expect.poll(()=>img.evaluate(i=>i.complete && i.naturalWidth>0)).toBe(true);
+ const chosen=await img.evaluate(i=>i.currentSrc);expect(new URL(chosen).origin).toBe('http://127.0.0.1:4173');
+ expect(images).toEqual([chosen]);
+ const geometry=await img.evaluate(i=>({image:i.getBoundingClientRect().toJSON(),parent:i.closest('figure').getBoundingClientRect().toJSON(),viewport:innerWidth}));
+ expect(geometry.image.width).toBeLessThanOrEqual(geometry.parent.width+1);
+ expect(geometry.image.right).toBeLessThanOrEqual(geometry.viewport+1);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});

@@ -38,7 +38,8 @@ async function keyboardReach(page, selectors) {
   const remaining = new Set(selectors);
   // Actual sequential keyboard navigation, not locator.focus()/scrollIntoView().
   // The bound covers homepage navigation while detecting traps/unreachable controls.
-  for (let tabs = 0; tabs < 120 && remaining.size; tabs++) {
+  const tabBound = await page.locator('a[href],button,input,select,textarea,summary,[tabindex]').count() + 10;
+  for (let tabs = 0; tabs < tabBound && remaining.size; tabs++) {
     await page.keyboard.press('Tab');
     for (const selector of [...remaining]) {
       const control = page.locator(selector);
