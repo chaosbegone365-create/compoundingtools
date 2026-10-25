@@ -66,6 +66,7 @@ test('comparison: upload, select, actual canvas pixels, download and invalid res
   await page.route('**/data/benchmarks.json', route => route.fulfill({json:FIXTURE}));
   await page.goto('/compare-performance.html');
   await expect(page.locator('#benchmarkStatus')).toContainText('SPY');
+  await expect(page.locator('#benchmarkStatus')).toContainText('last retrieved unknown');
   await upload(page,csv);
   await expect(page.locator('#portfolioReturn')).toHaveText('+25.00%');
   await expect(page.locator('#benchmarkReturn')).toHaveText('+10.00%');
@@ -86,6 +87,24 @@ test('comparison: upload, select, actual canvas pixels, download and invalid res
   await upload(page,'date,value\n2025-02-30,100\n2025-03-03,110');
   await expect(page.locator('#message')).toContainText('Invalid date');
   await expect(page.locator('#output')).not.toBeVisible(); await expect(page.locator('#download')).toBeDisabled();
+});
+
+test('comparison: retrieval and price dates stay distinct for fresh, cached and legacy metadata', async ({ page }) => {
+  let metadata;
+  await page.route('**/data/benchmarks.json', route => route.fulfill({json:{...FIXTURE, metadata}}));
+  for (const [entry, expected] of [
+    [{fetched_at:'2026-10-01T00:00:00Z',status:'fresh'}, 'last retrieved 2026-10-01T00:00:00Z'],
+    [{fetched_at:'2026-09-30T00:00:00Z',status:'cached'}, 'last retrieved 2026-09-30T00:00:00Z (cached; latest refresh unavailable)'],
+    [{fetched_at:null,status:'cached'}, 'last retrieved unknown (cached; latest refresh unavailable)'],
+    [undefined, 'last retrieved unknown']
+  ]) {
+    metadata = entry ? {SPY:entry} : null;
+    await page.goto('/compare-performance.html');
+    await expect(page.locator('#benchmarkStatus')).toContainText('last price observation 2025-01-06');
+    await expect(page.locator('#benchmarkStatus')).toContainText(expected);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
+    if (entry?.status !== 'cached') await expect(page.locator('#benchmarkStatus')).not.toContainText('(cached');
+  }
 });
 
 test('comparison: absent benchmark data is explicit, never invented', async ({ page }) => {

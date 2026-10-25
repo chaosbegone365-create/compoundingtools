@@ -22,7 +22,8 @@
     ['meals', 'Meal planner and grocery budget', 'Health', 'health-meal-planner.html', 'Plan meals, ingredient quantities, and grocery spending.', 'food grocery groceries meal cooking recipes shopping nutrition'],
     ['mortgage', 'All-in mortgage calculator', 'Home', 'home-mortgage.html', 'Estimate housing payments including taxes, insurance, and other costs.', 'house home loan mortgage payment buy property pmi hoa'],
     ['home-savings', 'Home savings calculator', 'Home', 'home-savings.html', 'Plan savings toward a home purchase.', 'down payment deposit house buy home savings'],
-    ['renovation', 'Home renovation budget', 'Home', 'home-renovation.html', 'Plan a renovation with contingencies and project costs.', 'remodel renovation kitchen bathroom repair contractor improvement']
+    ['renovation', 'Home renovation budget', 'Home', 'home-renovation.html', 'Plan a renovation with contingencies and project costs.', 'remodel renovation kitchen bathroom repair contractor improvement'],
+    ["renovation-quotes", "Renovation quote & preference comparison", "Home", "home-renovation-quotes.html", "Compare your material quotes, entered project costs and subjective preferences against one hard budget.", "home renovation remodel material quote comparison aesthetics durability longevity maintenance budget labor removal tax contingency hard cap preference"]
   ].map(([id, name, category, href, description, keywords]) => ({ id, name, category, href, description, keywords }));
   const normalize = value => String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   const stop = new Set(['a','an','the','for','of','to','my','i','want','need','how','do','can','and','with','calculator','tool']);

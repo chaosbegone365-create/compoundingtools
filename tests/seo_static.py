@@ -56,6 +56,10 @@ assert all(u.startswith(BASE) and not urlsplit(u).fragment for u in urls),'Bad s
 assert 'Sitemap: '+BASE+'sitemap.xml' in (ROOT/'robots.txt').read_text(),'Robots sitemap mismatch'
 for name in ['options.html','compare-performance.html','privacy.html','terms.html']:
     assert any('noindex' in r for r in pages[name].robots),(name,'beta/legal noindex lost')
+# New renovation comparison remains draft until separate exact-commit browser/live gates.
+assert pages['home-renovation-quotes.html'].robots == ['noindex,follow'], 'renovation draft robots changed'
+assert BASE+'home-renovation-quotes.html' not in urls, 'renovation draft leaked into sitemap'
+assert 'Draft' in (ROOT/'home-renovation-quotes.html').read_text(), 'renovation draft notice missing'
 # These reviewed tools have passed the release gate and must remain discoverable.
 for name in ['family-school-costs.html','family-college-paths.html','money-cash-goals.html','travel-quote-tradeoffs.html']:
     assert not any('noindex' in r for r in pages[name].robots),(name,'released tool unexpectedly noindex')
