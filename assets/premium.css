@@ -19,7 +19,7 @@ a{color:var(--cyf-green)}
 button,.btn,input[type=submit]{border-radius:10px!important}
 button{background:var(--cyf-green)!important}
 input,select,textarea{border-radius:10px!important}
-:focus-visible{outline:3px solid #d59e37!important;outline-offset:3px}
+:focus-visible{outline:3px solid #d59e37!important;outline-offset:3px;scroll-margin-block:16px}
 footer{background:#102e2c!important;color:#d7e8e0!important}
 footer p,footer a{color:#d7e8e0!important}
 @media(max-width:600px){header{min-height:67px;padding:13px 18px!important;flex-wrap:wrap}header a.brand-link{font-size:16px!important}header a.brand-link .brand-icon{width:29px;height:29px;font-size:18px}main{padding-left:18px!important;padding-right:18px!important}}

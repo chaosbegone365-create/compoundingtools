@@ -31,7 +31,20 @@ async function keyboardReach(page, selectors) {
       const control = page.locator(selector);
       if (!await control.evaluate(el => el === document.activeElement)) continue;
       await expect(control).toBeFocused();
-      await expect(control).toBeInViewport({ ratio:1 });
+      try {
+        await expect(control).toBeInViewport({ ratio:1 });
+      } catch (error) {
+        const geometry = await control.evaluate(el => ({
+          rect: el.getBoundingClientRect().toJSON(),
+          innerWidth, innerHeight, scrollX, scrollY,
+          visualViewport: window.visualViewport ? {
+            width: visualViewport.width, height: visualViewport.height,
+            offsetLeft: visualViewport.offsetLeft, offsetTop: visualViewport.offsetTop
+          } : null
+        }));
+        console.error('Focused control geometry:', page.url(), selector, JSON.stringify(geometry));
+        throw error;
+      }
       const box = await control.boundingBox();
       const viewport = page.viewportSize();
       expect(box, `${selector} must have rendered bounds`).not.toBeNull();
