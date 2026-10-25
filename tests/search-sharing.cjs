@@ -5,7 +5,7 @@ const search = require('../assets/tool-search.js');
 const share = require('../assets/share-tools.js');
 let checks = 0;
 function ok(value, message) { assert.ok(value, message); checks++; }
-for (const [q,id] of [['options investing','options'],['put option','options'],['school','school-costs'],['education','school-costs'],['college','college-paths'],['university','college-paths'],['cash reserve','cash-goals'],['grocery','meals'],['meal','meals'],['renovation','renovation'],['retire','retirement'],['mortgage','mortgage'],['down payment','home-savings'],['travel savings','travel-savings'],['compound interest','growth'],['pay raise','raise'],['workout schedule','workout']]) ok(search.search(q)[0].id === id, q);
+for (const [q,id] of [['trip quotes','trip-quote-tradeoffs'],['hard budget alternatives','trip-quote-tradeoffs'],['airfare ceiling','trip-quote-tradeoffs'],['options investing','options'],['put option','options'],['school','school-costs'],['education','school-costs'],['college','college-paths'],['university','college-paths'],['cash reserve','cash-goals'],['grocery','meals'],['meal','meals'],['renovation','renovation'],['retire','retirement'],['mortgage','mortgage'],['down payment','home-savings'],['travel savings','travel-savings'],['compound interest','growth'],['pay raise','raise'],['workout schedule','workout']]) ok(search.search(q)[0].id === id, q);
 ok(search.search('').length === search.catalog.length, 'empty lists all');
 ok(search.search('  THE calculator! ').length === search.catalog.length, 'stop words list all');
 ok(search.search('zzzzxyz').length === 0, 'no result');
