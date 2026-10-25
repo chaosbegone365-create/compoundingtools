@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://chaosbegone365-create.github.io/compoundingtools/sitemap.xml
+Sitemap: https://compoundyourfuture.com/sitemap.xml

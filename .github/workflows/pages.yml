@@ -18,6 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate calculator math, scripts, and technical SEO
+        run: |
+          node tests/script-syntax.cjs
+          node tests/calculator-regressions.cjs
+          node tests/comparison-unit.cjs
+          node tests/household-regressions.cjs
+          node tests/mortgage-content.cjs
+          node tests/planner-regressions.cjs
+          python3 tests/seo_static.py
       - uses: actions/configure-pages@v5
         with:
           enablement: true

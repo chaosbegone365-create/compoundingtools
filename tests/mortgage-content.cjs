@@ -1,0 +1,22 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
+const html=fs.readFileSync(path.resolve(__dirname,'../home-mortgage.html'),'utf8');
+const nodes={};
+const node=id=>nodes[id]??=( {value:'',textContent:'',listeners:{},addEventListener(type,fn){this.listeners[type]=fn}} );
+for(const [,id,value] of html.matchAll(/<input\b[^>]*id="([^"]+)"[^>]*value="([^"]+)"[^>]*>/g))node(id).value=value;
+const sandbox={document:{getElementById:node,querySelectorAll:()=>['f0','f1','f2'].map(node)},Intl,Number,Math};vm.createContext(sandbox);
+vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],sandbox);
+const run=s=>vm.runInContext(s,sandbox);let n=0;
+function check(name,fn){fn();n++;console.log('PASS '+name)}
+check('worked example independent Decimal reference',()=>assert(Math.abs(run('mortgagePayment(350000,6.5,30)')-2212.23808222537306216)<1e-9));
+check('initial rounded worked example',()=>assert.equal(node('answer').textContent,'Estimated monthly principal & interest: $2,212'));
+check('input event live recalculates',()=>{node('f0').value='120000';node('f1').value='0';node('f2').value='10';node('calc').listeners.input();assert.equal(node('answer').textContent,'Estimated monthly principal & interest: $1,000')});
+check('empty input clears prior result',()=>{node('f0').value='';node('calc').listeners.input();assert.equal(node('answer').textContent,'Please enter every required input.')});
+check('zero term clears prior result',()=>{node('f0').value='120000';node('f2').value='0';node('calc').listeners.input();assert.equal(node('answer').textContent,'Loan term must be greater than zero.')});
+check('negative input clears prior result',()=>{node('f0').value='-1';node('calc').listeners.input();assert.equal(node('answer').textContent,'Please enter valid nonnegative numbers.')});
+check('repeated valid edit restores result',()=>{node('f0').value='350000';node('f1').value='6.5';node('f2').value='30';node('calc').listeners.input();assert.equal(node('answer').textContent,'Estimated monthly principal & interest: $2,212')});
+check('submit still supported',()=>{let prevented=false;node('calc').listeners.submit({preventDefault(){prevented=true}});assert(prevented)});
+check('all input hints exist',()=>{for(const id of ['loan-help','rate-help','term-help'])assert(html.includes(`id="${id}"`))});
+check('polite result announcement retained',()=>assert(html.includes('role="status" aria-live="polite"')));
+check('canonical retained',()=>assert(html.includes('rel="canonical" href="https://compoundyourfuture.com/home-mortgage.html"')));
+console.log(`${n} mortgage content/live-input checks passed. Mock DOM only, not browser rendering.`);
