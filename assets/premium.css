@@ -24,3 +24,6 @@ footer{background:#102e2c!important;color:#d7e8e0!important}
 footer p,footer a{color:#d7e8e0!important}
 @media(max-width:600px){header{min-height:67px;padding:13px 18px!important;flex-wrap:wrap}header a.brand-link{font-size:16px!important}header a.brand-link .brand-icon{width:29px;height:29px;font-size:18px}main{padding-left:18px!important;padding-right:18px!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Keep sequential keyboard focus visible without competing smooth-scroll animations. */
+html:has(:focus-visible){scroll-behavior:auto}
