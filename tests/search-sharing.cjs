@@ -5,7 +5,7 @@ const search = require('../assets/tool-search.js');
 const share = require('../assets/share-tools.js');
 let checks = 0;
 function ok(value, message) { assert.ok(value, message); checks++; }
-for (const [q,id] of [['trip quotes','trip-quote-tradeoffs'],['hard budget alternatives','trip-quote-tradeoffs'],['airfare ceiling','trip-quote-tradeoffs'],['options investing','options'],['put option','options'],['school','school-costs'],['education','school-costs'],['college','college-paths'],['university','college-paths'],['cash reserve','cash-goals'],['grocery','meals'],['meal','meals'],['renovation','renovation'],['retire','retirement'],['mortgage','mortgage'],['down payment','home-savings'],['travel savings','travel-savings'],['compound interest','growth'],['pay raise','raise'],['workout schedule','workout']]) ok(search.search(q)[0].id === id, q);
+for (const [q,id] of [['renovation quotes','renovation-quotes'],['material quote','renovation-quotes'],['aesthetics durability','renovation-quotes'],['hard project cap','renovation-quotes'],['trip quotes','trip-quote-tradeoffs'],['hard budget alternatives','trip-quote-tradeoffs'],['airfare ceiling','trip-quote-tradeoffs'],['options investing','options'],['put option','options'],['school','school-costs'],['education','school-costs'],['college','college-paths'],['university','college-paths'],['cash reserve','cash-goals'],['grocery','meals'],['meal','meals'],['renovation','renovation'],['retire','retirement'],['mortgage','mortgage'],['down payment','home-savings'],['travel savings','travel-savings'],['compound interest','growth'],['pay raise','raise'],['workout schedule','workout']]) ok(search.search(q)[0].id === id, q);
 ok(search.search('').length === search.catalog.length, 'empty lists all');
 ok(search.search('  THE calculator! ').length === search.catalog.length, 'stop words list all');
 ok(search.search('zzzzxyz').length === 0, 'no result');
@@ -21,6 +21,7 @@ const doc = href => ({querySelector: () => href ? {href} : null});
 const status = {textContent:''}; const manual = {hidden:true,value:'',focus(){},select(){}};
 (async () => {
  ok(share.canonicalURL(doc('https://compoundyourfuture.com/?salary=999#child')) === 'https://compoundyourfuture.com/', 'strips query and fragment');
+ ok(share.canonicalURL(doc('https://compoundyourfuture.com/home-renovation-quotes.html?budget=30000#private')) === 'https://compoundyourfuture.com/home-renovation-quotes.html', 'renovation canonical strips private state');
  ok(share.canonicalURL(doc('https://evil.example/')) === null, 'rejects unrelated origin');
  ok(share.canonicalURL(doc(null)) === null, 'requires canonical');
  let payload; await share.share(doc('https://compoundyourfuture.com/options.html?secret=1#private'), {share: async data => { payload=data; }},status,manual);

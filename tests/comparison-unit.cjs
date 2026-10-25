@@ -25,6 +25,16 @@ async function upload(text,size) {sandbox.testFile=file(text,size); await run('r
 (async()=>{
  await new Promise(setImmediate);
  assert.ok(element('benchmarkStatus').textContent.includes('2026-09-30T00:00:00Z (cached'));
+ assert.ok(element('benchmarkStatus').textContent.includes('last price observation 2025-01-06'));
+ for (const metadata of [null, undefined, {}, {SPY:{fetched_at:null,status:'cached'}}]) {
+  fixture.metadata=metadata;run('setBenchmark()');
+  assert.ok(element('benchmarkStatus').textContent.includes('last retrieved unknown'));
+  assert.ok(!element('benchmarkStatus').textContent.includes('last retrieved 2026-10-01'));
+ }
+ assert.ok(element('benchmarkStatus').textContent.includes('(cached; latest refresh unavailable)'));
+ fixture.metadata={SPY:{fetched_at:'2026-10-01T00:00:00Z',status:'fresh'}};run('setBenchmark()');
+ assert.ok(element('benchmarkStatus').textContent.includes('last price observation 2025-01-06 · last retrieved 2026-10-01T00:00:00Z'));
+ assert.ok(!element('benchmarkStatus').textContent.includes('(cached'));
  assert.equal(run('validDate("2025-02-30")'),false);
  assert.equal(run('validDate("2024-02-29")'),true);
  await upload('date,value\n2025-01-02,10000\n2025-01-03,11000\n2025-01-06,12500');
@@ -46,5 +56,5 @@ async function upload(text,size) {sandbox.testFile=file(text,size); await run('r
  sandbox.fetch=async()=>({ok:false});await run('loadBenchmarks()');assert.ok(element('benchmarkStatus').textContent.includes('unavailable'));assert.equal(run('state.rows.length'),0);
  assert.throws(()=>run("benchmarkMap([['2025-02-30',10],['2025-03-01',12]])"));
  assert.throws(()=>run("benchmarkMap([['2025-01-02',10],['2025-01-02',12]])"));
- console.log('PASS: 19 comparison cases: syntax/markup, cached freshness, calendar dates, upload/normalization, chart calls, ETF switch, CSV download, stale clearing, quoted currency, malformed/duplicate/missing data, size limit, overlap, omissions, upload race, unavailable/malformed benchmarks. Synthetic fixtures; mocked DOM/canvas, not browser QA.');
+ console.log('PASS: comparison cases: syntax/markup, per-series cached/unknown freshness, legacy/null metadata, retrieval versus last price observation, calendar dates, upload/normalization, chart calls, ETF switch, CSV download, stale clearing, quoted currency, malformed/duplicate/missing data, size limit, overlap, omissions, upload race, unavailable/malformed benchmarks. Synthetic fixtures; mocked DOM/canvas, not browser QA.');
 })().catch(e=>{console.error(e);process.exit(1)});
