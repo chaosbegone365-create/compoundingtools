@@ -34,3 +34,29 @@ Source and cached series must both contain at least 200 strictly increasing,
 unique, nonfuture calendar dates with finite positive prices. At least three valid
 series are required to replace the file; failed publication leaves existing bytes
 unchanged. These tests do not establish provider availability or publish a dataset.
+
+## Optional local benchmark CSV
+
+The comparison page can use either a published built-in ETF dataset or a separate
+user-provided `date,value` CSV. Source selection is explicit: a missing built-in
+file remains unavailable, and uploading does not publish or replace that dataset.
+Both files use the same parser and 3 MB per-file limit. A custom source is labeled
+user-provided and not independently verified in the status, results and export
+header. There is no provider-freshness or adjusted-total-return claim for it.
+
+`node tests/comparison-unit.cjs` also covers independent first/last-intersection
+arithmetic, unmatched dates, safe export attribution, malformed/nonpositive values,
+file limits, canceled/repeated/interrupted reads, replacement/reset/source-switch
+races, delayed built-in success/failure, stale metric/canvas clearing and explicit
+switch-back behavior. A completed custom file remains in memory when switching
+sources; Clear benchmark file removes it, and reload clears both files. Files are
+not stored in URLs or browser storage. The existing canonical-only share action is
+unchanged. Deposits/withdrawals are not adjusted; this remains a price/value
+comparison, not a verified total-return or cash-flow-aware performance model.
+
+`tests/browser/comparison-upload.spec.cjs` exercises those flows using real file
+inputs and intercepted synthetic successful/missing datasets in both configured
+viewports. It also checks actual chart pixels/download bytes, local-only requests,
+no browser storage, text-only filenames and canonical-only sharing. Test discovery
+is not browser execution: these browser cases require an actual CI run. Neither
+suite contacts a provider, publishes data or establishes live market availability.

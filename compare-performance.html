@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><meta name="description" content="Upload a portfolio CSV and select an ETF benchmark. Historical comparisons require available benchmark data and matching dates."><title>Did You Beat the Market? | Compound Your Future</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><meta name="description" content="Compare portfolio values with a built-in ETF dataset or your own benchmark CSV. Files stay in your browser; matching dates are required."><title>Did You Beat the Market? | Compound Your Future</title><style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#f7faf8;color:#17333d}*{box-sizing:border-box}body{margin:0}header{background:white;border-bottom:1px solid #e0e9e4;padding:20px max(22px,calc((100% - 1100px)/2))}a{color:#087d62}header a{font-size:21px;font-weight:850;text-decoration:none}main{max-width:1100px;margin:auto;padding:42px 22px}h1{font-size:clamp(32px,5vw,52px);letter-spacing:-2px;margin:8px 0}p{line-height:1.7;color:#5d727b}.eyebrow{color:#098b6b;font-size:12px;font-weight:800;letter-spacing:1.5px}.panel{background:white;border:1px solid #e0eae3;border-radius:20px;padding:26px;margin:24px 0;box-shadow:0 8px 30px #173b290a}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.drop{border:2px dashed #b9d7c9;border-radius:15px;background:#f3faf6;padding:28px;text-align:center;cursor:pointer}.drop.drag{background:#ddf5e8;border-color:#089a73}.drop strong{display:block;font-size:18px;margin-bottom:8px}.drop small{display:block;color:#607a73;margin-top:8px}.drop input{max-width:100%;margin-top:15px}label{font-weight:750;font-size:14px}select{padding:12px;border:1px solid #bcd2c8;border-radius:10px;font:inherit;margin:9px 0;width:100%}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.metric{background:#edf8f1;border-radius:14px;padding:20px}.metric span{font-size:12px;color:#557569}.metric strong{display:block;font-size:27px;margin-top:8px;color:#087658}canvas{width:100%;height:340px;display:block}.error{color:#9a3333;font-weight:700}.muted{color:#657b82;font-size:13px}button{border:0;background:#0c9472;color:white;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.hidden{display:none}footer{background:#102e40;color:white;text-align:center;padding:32px;margin-top:50px}footer a{color:#b4e7d5}@media(max-width:700px){.grid,.results{grid-template-columns:1fr}.panel{padding:19px}canvas{height:270px}}
-.benchmark-choice{border:1px solid #d9e8df;border-radius:15px;padding:26px;background:linear-gradient(135deg,#f4faf6,#edf7f3)}.benchmark-choice label{display:block;font-size:15px;font-weight:800;color:#21443f}.benchmark-choice select{display:block;margin:14px 0 10px;width:100%;background:white;border:1px solid #b9d5c8;border-radius:10px;padding:13px;font:700 15px system-ui;color:#183e39}.benchmark-tip{margin-top:25px;border-top:1px solid #d7e8dc;padding-top:20px}.benchmark-tip strong{color:#087d62}.benchmark-tip p{font-size:13px;margin-bottom:0}</style><link rel="stylesheet" href="assets/premium.css"><link rel="canonical" href="https://compoundyourfuture.com/compare-performance.html"><link rel="stylesheet" href="assets/tool-discovery.css"><link rel="stylesheet" href="assets/site-sidebar.css">
+.benchmark-choice{border:1px solid #d9e8df;border-radius:15px;padding:26px;background:linear-gradient(135deg,#f4faf6,#edf7f3)}.benchmark-choice label{display:block;font-size:15px;font-weight:800;color:#21443f}.benchmark-choice select{display:block;margin:14px 0 10px;width:100%;background:white;border:1px solid #b9d5c8;border-radius:10px;padding:13px;font:700 15px system-ui;color:#183e39}.drop,.benchmark-choice{min-width:0}.drop small,.benchmark-choice p{overflow-wrap:anywhere}.benchmark-choice input{display:block;max-width:100%;margin:12px 0}.benchmark-choice button{margin-top:8px}.benchmark-choice [hidden]{display:none}.benchmark-tip{margin-top:25px;border-top:1px solid #d7e8dc;padding-top:20px}.benchmark-tip strong{color:#087d62}.benchmark-tip p{font-size:13px;margin-bottom:0}</style><link rel="stylesheet" href="assets/premium.css"><link rel="canonical" href="https://compoundyourfuture.com/compare-performance.html"><link rel="stylesheet" href="assets/tool-discovery.css"><link rel="stylesheet" href="assets/site-sidebar.css">
 <script src="assets/site-sidebar.js" defer></script>
 </head><body>
 <header><a class="brand-link" href="./" aria-label="Compound Your Future home"><span class="brand-icon" aria-hidden="true">↗</span><span>Compound <span class="brand-emphasis">Your Future</span></span></a></header>
@@ -25,12 +25,22 @@
 <p class="cyf-sidebar-note">Free tools. Clear assumptions.<br>Better everyday decisions.</p>
 </aside></div>
 <!-- cyf-sidebar:end -->
-<main><div class="eyebrow">INVESTING · PERFORMANCE LAB</div><h1>Did you beat the market?</h1><p>Drop in your portfolio's historical values and choose an ETF benchmark. Compare growth on matching dates—without sending your portfolio file to a server.</p><section class="panel"><div class="grid"><div class="drop" id="portfolioDrop" tabindex="0" role="button" aria-label="Upload portfolio CSV"><strong>↥ Your portfolio CSV</strong><span>Drag & drop or choose a file</span><small>date,value · e.g. 2025-01-02,10000</small><input id="portfolioFile" type="file" accept=".csv,text/csv"><small id="portfolioStatus">No file selected</small></div><div class="benchmark-choice"><label for="benchmarkSelect">Choose a benchmark ETF</label><select id="benchmarkSelect"><option value="SPY">SPY · S&P 500 ETF</option><option value="VOO">VOO · Vanguard S&P 500 ETF</option><option value="QQQ">QQQ · Nasdaq-100 ETF</option><option value="VTI">VTI · Total US Stock Market</option><option value="IWM">IWM · Russell 2000 ETF</option><option value="DIA">DIA · Dow Jones ETF</option></select><p id="benchmarkStatus" class="muted" role="status">Loading historical benchmark prices…</p><div class="benchmark-tip"><strong>One-click comparison</strong><p>Historical benchmark prices are refreshed when the data provider is available. Coverage and freshness are shown above. No benchmark upload required.</p></div></div></div><p class="muted">Portfolio values must exclude deposits and withdrawals during the comparison period. Benchmark prices are historical daily series, not live quotes. This comparison is price-based unless the source explicitly supplies adjusted total-return prices.</p><p id="message" role="status"></p></section>
-<section class="panel hidden" id="output"><h2>Performance comparison</h2><p id="period" class="muted"></p><div class="results"><div class="metric"><span>Portfolio return</span><strong id="portfolioReturn">—</strong></div><div class="metric"><span>Benchmark return</span><strong id="benchmarkReturn">—</strong></div><div class="metric"><span>Outperformance</span><strong id="difference">—</strong></div></div><h3>Growth of $10,000</h3><canvas id="chart" role="img" aria-label="Line chart comparing normalized portfolio and benchmark performance"></canvas><p id="detail" class="muted"></p><button id="download" disabled>Download comparison CSV</button></section>
-<section class="panel"><h2>How to prepare your files</h2><p>Export historical portfolio values from your brokerage or spreadsheet, with a date and a total value on each row. Select a benchmark above; no ETF file is required. Your portfolio file is processed locally in your browser.</p><p><strong>Important:</strong> A portfolio balance series with deposits, withdrawals, or transfers is not a valid investment return series. This initial tool cannot calculate time-weighted or money-weighted returns. We plan to add transaction imports and cash-flow adjustment later.</p><p class="muted">For educational comparison only. Not investment advice. Past performance does not predict future results.</p></section><a href="./">← All tools</a></main><section class="share-tool" aria-label="Share this page"><button type="button" data-share-tool>Share this page ↗</button><p>Share a useful tool, not your personal information. Only the page link is shared—not your inputs or results.</p><p data-share-status role="status" aria-live="polite"></p><input data-share-link aria-label="Page link to copy" readonly hidden></section><footer>Compound Your Future · Your Information. Your Decision. · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></footer>
+<main><div class="eyebrow">INVESTING · PERFORMANCE LAB</div><h1>Did you beat the market?</h1><p>Compare your portfolio's historical values with a built-in ETF dataset or a benchmark CSV you provide. Both files stay in your browser. Comparisons use matching dates, not live quotes.</p>
+<section class="panel"><div class="grid">
+<div class="drop" id="portfolioDrop" tabindex="0" role="button" aria-label="Upload portfolio CSV"><strong>↥ Your portfolio CSV</strong><span>Drag &amp; drop or choose a file</span><small>date,value · e.g. 2025-01-02,10000 · maximum 3 MB</small><input id="portfolioFile" type="file" accept=".csv,text/csv" aria-label="Choose portfolio CSV"><small id="portfolioStatus">No file selected</small></div>
+<div class="benchmark-choice">
+<label for="benchmarkSource">Benchmark source</label><select id="benchmarkSource"><option value="builtin">Built-in ETF dataset</option><option value="upload">My benchmark CSV · not independently verified</option></select>
+<div id="builtinBenchmark"><label for="benchmarkSelect">Choose a benchmark ETF</label><select id="benchmarkSelect"><option value="SPY">SPY · S&amp;P 500 ETF</option><option value="VOO">VOO · Vanguard S&amp;P 500 ETF</option><option value="QQQ">QQQ · Nasdaq-100 ETF</option><option value="VTI">VTI · Total US Stock Market</option><option value="IWM">IWM · Russell 2000 ETF</option><option value="DIA">DIA · Dow Jones ETF</option></select></div>
+<div id="customBenchmark" hidden><label for="benchmarkFile">Choose your benchmark CSV</label><input id="benchmarkFile" type="file" accept=".csv,text/csv" aria-describedby="customBenchmarkHelp"><p id="customBenchmarkHelp" class="muted">Use date,value headers and at least two positive values. Maximum 3 MB. Use a consistent price series and check its source and any adjustments yourself.</p><p id="benchmarkFileStatus" class="muted" role="status">No benchmark file selected</p><button id="clearBenchmark" type="button">Clear benchmark file</button></div>
+<p id="benchmarkStatus" class="muted" role="status">Loading historical benchmark prices…</p><div class="benchmark-tip"><strong>Your choice of source</strong><p>Built-in prices are available only when a historical dataset has been published. If unavailable, select your own CSV above. User-provided data is not independently verified and is never treated as the built-in ETF dataset.</p></div></div></div>
+<p id="cashflowWarning" class="muted"><strong>Portfolio values must exclude deposits and withdrawals during the comparison period.</strong> This tool does not adjust cash flows or calculate time-weighted or money-weighted returns. This is a historical price/value comparison, not a verified adjusted total-return comparison; dividends, splits and other adjustments depend on your source.</p><p id="message" role="status"></p></section>
+<section class="panel hidden" id="output"><h2>Performance comparison</h2><p id="period" class="muted"></p><p id="resultSource" class="muted"></p><div class="results"><div class="metric"><span>Portfolio return</span><strong id="portfolioReturn">—</strong></div><div class="metric"><span>Benchmark return</span><strong id="benchmarkReturn">—</strong></div><div class="metric"><span>Outperformance</span><strong id="difference">—</strong></div></div><h3>Growth of $10,000</h3><canvas id="chart" role="img" aria-label="Line chart comparing normalized portfolio and benchmark performance"></canvas><p id="detail" class="muted"></p><button id="download" disabled>Download comparison CSV</button></section>
+<section class="panel"><h2>How to prepare your files</h2><p>Export historical portfolio values from your brokerage or spreadsheet, with a date and a total value on each row. Select a built-in benchmark when available, or choose “My benchmark CSV” and provide date,value rows for the comparison series. At least two dates must match. Files are processed only in browser memory: they are not uploaded, put in the page URL, or saved in browser storage. Reloading clears them. Sharing sends only the canonical page link; downloading saves the normalized comparison to your device.</p><details><summary>Fictional CSV format example</summary><p class="muted">Example only, not real market data. Create a separate file for each series using the same headers; replace these fictional values with your own. No example data is loaded into your results.</p><pre>date,value
+2025-01-02,100
+2025-01-03,105</pre></details><p><strong>Important:</strong> A portfolio balance series with deposits, withdrawals, or transfers is not a valid investment return series. This initial tool cannot calculate time-weighted or money-weighted returns. We plan to add transaction imports and cash-flow adjustment later.</p><p class="muted">For educational comparison only. Not investment advice. Past performance does not predict future results.</p></section><a href="./">← All tools</a></main><section class="share-tool" aria-label="Share this page"><button type="button" data-share-tool>Share this page ↗</button><p>Share a useful tool, not your personal information. Only the page link is shared—not your inputs or results.</p><p data-share-status role="status" aria-live="polite"></p><input data-share-link aria-label="Page link to copy" readonly hidden></section><footer>Compound Your Future · Your Information. Your Decision. · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></footer>
 <script>
 'use strict';
-const state = {portfolio: null, benchmark: null, rows: [], benchmarks: null, uploadId: 0};
+const state = {portfolio: null, benchmark: null, rows: [], benchmarks: null, uploadId: 0, source: 'builtin', custom: null, customUploadId: 0, customReading: false, benchmarkError: null};
 const el = id => document.getElementById(id);
 const money = n => '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const pct = n => (n >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%';
@@ -43,6 +53,11 @@ function clearResults() {
   state.rows = [];
   el('output').classList.add('hidden');
   el('download').disabled = true;
+  for (const id of ['portfolioReturn', 'benchmarkReturn', 'difference']) el(id).textContent = '—';
+  for (const id of ['period', 'detail', 'resultSource']) el(id).textContent = '';
+  const canvas = el('chart');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  canvas.setAttribute('aria-label', 'No comparison available');
 }
 function message(text, error = false) {
   el('message').className = error ? 'error' : '';
@@ -83,7 +98,7 @@ function parseCSV(text) {
     const value = typeof raw === 'string' && raw !== '' ? Number(raw.replace(/[$,]/g, '')) : NaN;
     if (!validDate(date) || !Number.isFinite(value) || value <= 0)
       throw Error('Invalid date or positive value on CSV row ' + (i + 2) + '. Use YYYY-MM-DD dates.');
-    if (values.has(date)) throw Error('Duplicate date ' + date + '. Keep one portfolio value per date.');
+    if (values.has(date)) throw Error('Duplicate date ' + date + '. Keep one value per date.');
     values.set(date, value);
   });
   return values;
@@ -92,6 +107,7 @@ async function receive(file) {
   if (!file) return;
   const request = ++state.uploadId;
   state.portfolio = null; clearResults(); message('Reading portfolio…');
+  el('portfolioStatus').textContent = 'Reading portfolio file…';
   try {
     if (file.size > 3000000) throw Error('File exceeds the 3 MB limit.');
     const text = await file.text();
@@ -106,7 +122,7 @@ async function receive(file) {
   }
 }
 const input = el('portfolioFile'), drop = el('portfolioDrop');
-input.addEventListener('change', () => receive(input.files[0]));
+input.addEventListener('change', () => { const file = input.files[0]; input.value = ''; receive(file); });
 drop.addEventListener('click', e => { if (e.target !== input) input.click(); });
 drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
 drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
@@ -124,41 +140,88 @@ function benchmarkMap(rows) {
   }
   return values;
 }
+// Each source owns its data. Selecting one never silently falls back to the other.
+function benchmarkLabel() {
+  return state.source === 'upload' ? 'User-provided benchmark' : el('benchmarkSelect').value;
+}
+async function receiveBenchmark(file) {
+  if (!file || state.source !== 'upload') return;
+  const request = ++state.customUploadId;
+  state.custom = null; state.benchmark = null; state.customReading = true;
+  clearResults(); message('Reading your benchmark CSV…');
+  el('benchmarkFileStatus').textContent = 'Reading benchmark file…';
+  el('benchmarkStatus').textContent = 'User-provided benchmark · reading file · not independently verified';
+  try {
+    if (file.size > 3000000) throw Error('File exceeds the 3 MB limit.');
+    const text = await file.text();
+    if (request !== state.customUploadId) return;
+    state.custom = parseCSV(text); state.customReading = false;
+    el('benchmarkFileStatus').textContent = file.name + ' · ' + state.custom.size + ' rows';
+    setBenchmark();
+  } catch (error) {
+    if (request !== state.customUploadId) return;
+    state.custom = null; state.benchmark = null; state.customReading = false; clearResults();
+    el('benchmarkFileStatus').textContent = 'Invalid benchmark file';
+    el('benchmarkStatus').textContent = 'User-provided benchmark unavailable · not independently verified';
+    message(error.message, true);
+  }
+}
+function clearCustomBenchmark() {
+  ++state.customUploadId; state.custom = null; state.customReading = false;
+  el('benchmarkFile').value = '';
+  el('benchmarkFileStatus').textContent = 'No benchmark file selected';
+  if (state.source === 'upload') setBenchmark();
+}
+function changeBenchmarkSource() {
+  // A source switch cancels an in-flight read, not a completed local file.
+  if (state.customReading) clearCustomBenchmark();
+  state.source = el('benchmarkSource').value;
+  el('builtinBenchmark').hidden = state.source !== 'builtin';
+  el('customBenchmark').hidden = state.source !== 'upload';
+  setBenchmark();
+}
 async function loadBenchmarks() {
   try {
     const response = await fetch('./data/benchmarks.json', {cache: 'no-cache'});
     if (!response.ok) throw Error('A verified historical ETF dataset has not been published.');
     const data = await response.json();
     if (!data || typeof data.series !== 'object' || data.series === null) throw Error('Benchmark data is incomplete.');
-    state.benchmarks = data; setBenchmark();
+    state.benchmarks = data; state.benchmarkError = null;
   } catch (error) {
-    state.benchmarks = null; state.benchmark = null; clearResults();
-    el('benchmarkStatus').textContent = 'Benchmark data unavailable: ' + error.message;
-    message('You can select a portfolio file, but comparison is unavailable until verified ETF data is published.');
+    state.benchmarks = null; state.benchmarkError = error.message;
   }
+  // A late built-in response must not replace or clear a user-provided comparison.
+  if (state.source === 'builtin') setBenchmark();
 }
 function setBenchmark() {
   state.benchmark = null; clearResults();
+  if (state.source === 'upload') {
+    state.benchmark = state.custom;
+    const dates = state.custom ? [...state.custom.keys()].sort() : [];
+    el('benchmarkStatus').textContent = 'User-provided benchmark · not independently verified' + (dates.length ? ' · ' + dates.length + ' observations from ' + dates[0] + ' to ' + dates.at(-1) + ' · no provider freshness or total-return verification' : ' · choose a CSV file');
+    compare(); return;
+  }
   const symbol = el('benchmarkSelect').value;
   try {
+    if (state.benchmarkError) throw Error(state.benchmarkError);
     state.benchmark = benchmarkMap(state.benchmarks?.series?.[symbol]);
     const dates = [...state.benchmark.keys()].sort();
     const meta = state.benchmarks.metadata?.[symbol] || {};
     const refreshed = meta.fetched_at || 'unknown';
-    el('benchmarkStatus').textContent = symbol + ' · ' + dates.length + ' observations since ' + dates[0] + ' · last price observation ' + dates.at(-1) + ' · last retrieved ' + refreshed + (meta.status === 'cached' ? ' (cached; latest refresh unavailable)' : '');
+    el('benchmarkStatus').textContent = 'Built-in dataset · ' + symbol + ' · ' + dates.length + ' observations since ' + dates[0] + ' · last price observation ' + dates.at(-1) + ' · last retrieved ' + refreshed + (meta.status === 'cached' ? ' (cached; latest refresh unavailable)' : '');
     compare();
   } catch (error) {
-    el('benchmarkStatus').textContent = symbol + ' data unavailable: ' + error.message;
-    message('Select an ETF with verified historical data to compare.', true);
+    el('benchmarkStatus').textContent = symbol + ' built-in data unavailable: ' + error.message;
+    message('Built-in comparison is unavailable. Choose another ETF with data, or select “My benchmark CSV” to compare your own unverified series.');
   }
 }
 function compare() {
   clearResults();
   if (!state.portfolio) { message('Upload your portfolio CSV to begin.'); return; }
-  if (!state.benchmark) { message('Portfolio loaded. Comparison is unavailable until verified ETF data is published.'); return; }
+  if (!state.benchmark) { message(state.source === 'upload' ? 'Portfolio loaded. Choose your benchmark CSV to compare; user-provided data is not independently verified.' : 'Portfolio loaded. Built-in comparison is unavailable until verified ETF data is published. You can select “My benchmark CSV” instead.'); return; }
   const dates = [...state.portfolio.keys()].filter(d => state.benchmark.has(d)).sort();
   if (dates.length < 2) {
-    message('Not enough matching trading dates. Your portfolio needs at least two dates within the selected ETF’s available history.', true); return;
+    message('Not enough matching dates. Your portfolio and selected benchmark need at least two dates in common.', true); return;
   }
   const p0 = state.portfolio.get(dates[0]), b0 = state.benchmark.get(dates[0]);
   const rows = dates.map(date => ({date, portfolio: 10000 * (state.portfolio.get(date) / p0), benchmark: 10000 * (state.benchmark.get(date) / b0)}));
@@ -171,10 +234,11 @@ function compare() {
   el('benchmarkReturn').textContent = pct(br);
   el('difference').textContent = (pr >= br ? '+' : '') + ((pr - br) * 100).toFixed(2) + ' pp';
   el('period').textContent = dates[0] + ' to ' + dates.at(-1) + ' · ' + dates.length + ' matching dates';
-  el('detail').textContent = 'Ending value of $10,000: portfolio ' + money(last.portfolio) + '; ' + el('benchmarkSelect').value + ' ' + money(last.benchmark) + '. Historical price comparison, not necessarily total return with reinvested dividends.';
+  el('resultSource').textContent = state.source === 'upload' ? 'Source: user-provided benchmark CSV · not independently verified. No live-data, adjustment or total-return verification.' : 'Source: built-in ' + benchmarkLabel() + ' historical price dataset.';
+  el('detail').textContent = 'Ending value of $10,000: portfolio ' + money(last.portfolio) + '; ' + benchmarkLabel() + ' ' + money(last.benchmark) + '. Historical price/value comparison, not verified total return with reinvested dividends. Portfolio values must exclude deposits and withdrawals.';
   el('output').classList.remove('hidden'); el('download').disabled = false;
   const omitted = state.portfolio.size - dates.length;
-  message('Comparison ready.' + (omitted ? ' ' + omitted + ' portfolio date(s) excluded because the ETF has no matching price.' : ''));
+  message('Comparison ready.' + (omitted ? ' ' + omitted + ' portfolio date(s) excluded because the selected benchmark has no matching value.' : ''));
   draw();
 }
 function draw() {
@@ -201,19 +265,25 @@ function draw() {
     state.rows.forEach((r, i) => i ? ctx.lineTo(x(r.date), y(r[key])) : ctx.moveTo(x(r.date), y(r[key]))); ctx.stroke();
   }
   ctx.fillStyle = '#0a9c77'; ctx.font = '13px sans-serif'; ctx.fillText('Portfolio', left, 20);
-  ctx.fillStyle = '#466fbd'; ctx.fillText(el('benchmarkSelect').value, left + 90, 20);
+  ctx.fillStyle = '#466fbd'; ctx.fillText(state.source === 'upload' ? 'Your CSV' : benchmarkLabel(), left + 90, 20);
   ctx.fillStyle = '#557569'; ctx.font = '11px sans-serif';
   ctx.fillText(state.rows[0].date, left, h - 8); ctx.textAlign = 'right'; ctx.fillText(state.rows.at(-1).date, w - right, h - 8);
-  canvas.setAttribute('aria-label', 'Portfolio versus ' + el('benchmarkSelect').value + ', ' + el('period').textContent + '. ' + el('detail').textContent);
+  canvas.setAttribute('aria-label', 'Portfolio versus ' + benchmarkLabel() + ', ' + el('period').textContent + '. ' + el('detail').textContent);
 }
 window.addEventListener('resize', draw);
 el('download').addEventListener('click', () => {
   if (state.rows.length < 2) return;
-  const csv = 'date,portfolio_normalized,' + el('benchmarkSelect').value + '_normalized\n' + state.rows.map(r => [r.date, r.portfolio.toFixed(4), r.benchmark.toFixed(4)].join(',')).join('\n');
+  const label = state.source === 'upload' ? 'user_provided_benchmark_not_verified' : el('benchmarkSelect').value;
+  const csv = 'date,portfolio_normalized,' + label + '_normalized\n' + state.rows.map(r => [r.date, r.portfolio.toFixed(4), r.benchmark.toFixed(4)].join(',')).join('\n');
   const url = URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8'}));
   const a = document.createElement('a'); a.href = url; a.download = 'compound-your-future-comparison.csv';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 el('benchmarkSelect').addEventListener('change', setBenchmark);
+el('benchmarkSource').addEventListener('change', changeBenchmarkSource);
+el('benchmarkFile').addEventListener('change', () => { const file = el('benchmarkFile').files[0]; el('benchmarkFile').value = ''; receiveBenchmark(file); });
+el('clearBenchmark').addEventListener('click', clearCustomBenchmark);
+// Do not restore file selections or a mismatched source control after a reload.
+el('benchmarkSource').value = 'builtin'; input.value = ''; el('benchmarkFile').value = '';
 loadBenchmarks();
 </script><script src="assets/share-tools.js"></script></body></html>
