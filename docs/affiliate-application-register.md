@@ -1,5 +1,5 @@
 # Affiliate application register
-Updated: 2026-10-25. Implements issue #3. No application submitted or approval confirmed in this run. Existing private accounts/email have not been checked; repository and issue #3 contain no prior application record. Confirm dashboard/email before each submission to avoid duplicates.
+Updated: 2026-10-25. Implements issue #3. Owner reports completing Expedia signup. Creator Hub access and provider-issued Vrbo link verified; explicit approval notice not separately observed. Existing private accounts/email have not been checked; repository and issue #3 contain no prior application record. Confirm dashboard/email before each submission to avoid duplicates.
 
 ## Verified application profile
 - Publisher: Compound Your Future
@@ -14,12 +14,12 @@ Updated: 2026-10-25. Implements issue #3. No application submitted or approval c
 ## Priority applications
 | Unique program key | Provider / network | Program URL | Status | Blocker / evidence | Proposed placement |
 |---|---|---|---|---|---|
-| expedia-group | Expedia / Hotels.com / Vrbo | https://creator.expediagroup.com/affiliates | not applied | Signup redirects to Expedia account email authentication. Free membership confirmed on official page. One group application; avoid separate duplicate Vrbo application. | Travel stay, flight, activity and car comparison actions |
+| expedia-group | Expedia / Hotels.com / Vrbo | https://creator.expediagroup.com/affiliates | applied (owner completed; link access verified) | Signed-in Creator Hub and working link builder verified 2026-10-25. Provider generated a Vrbo USA affiliate link. Explicit acceptance notice not separately observed; do not create another application. Bank/payout setup remains incomplete. | Travel stay, flight, activity and car comparison actions |
 | booking-com | Booking.com / CJ | https://bookitbutton.booking.com/affiliate-program/v2/index.en-us.html | not applied | Official program directs to regional network registration; use existing CJ account if any. Network and advertiser acceptance are distinct. | Travel accommodation alternative |
 | coinbase-consumer | Coinbase / Impact | https://www.coinbase.com/affiliates | not applied | Official application opens an unchecked “I have read and accepted Coinbase's offer” contractual gate before signup/sign-in. Do not check without owner's specific consent. | Relevant crypto education only; no recommendation to trade to improve calculator outcomes |
 | turbotax-us | TurboTax / CJ | https://turbotax.intuit.com/corp/affiliates.jsp | not applied | Official US application routes to CJ advertiser 1905878. Reuse CJ for Booking.com; do not create duplicate publisher accounts. | Tax preparation next steps after relevant compensation/tax explanations |
 
-All four: tracking URL/ID = null; approval evidence = null; submission date = null; eligible jurisdictions = unverified pending account/contract review; allowed placements = proposed only, not authorized by provider; payout terms = contract verification required; disclosure = clear nearby Affiliate link / Advertisement plus sitewide disclosure; review date = 2026-10-25. No secrets or private account IDs belong here.
+Other three programs: tracking URL/ID = null; approval evidence = null; submission date = null; eligible jurisdictions = unverified pending account/contract review; allowed placements = proposed only, not authorized by provider; payout terms = contract verification required; disclosure = clear nearby Affiliate link / Advertisement plus sitewide disclosure; review date = 2026-10-25. No secrets or private account IDs belong here.
 
 ## Additional researched candidates across the actual six site categories
 | Category | Candidate | Source | Status / fit and remaining checks |
@@ -60,4 +60,4 @@ We propose optional tax-preparation links where visitors are exploring tax-relat
 8. Review broken links/offer expiry and reconcile actual network conversions and revenue monthly. Do not report clicks as revenue.
 
 ## Current integration gate
-No approved partner-issued links are available. Website affiliate activation is intentionally blocked. Existing ordinary provider links, if present, must not be described as commissionable. No recurring software cost incurred.
+Expedia Creator Hub generated a Vrbo USA affiliate link on 2026-10-25. Link retained in the provider's link history; no private account identifiers copied here. Program/commission terms, allowed website placements and geographic scope still require review before website activation. Bank details form remains incomplete and Partnerize terms checkbox unchecked; owner must handle sensitive payout information. Explicit advertiser approval notice has not been separately observed. Other programs have no issued links. Existing ordinary provider links, if present, must not be described as commissionable. No recurring software cost incurred.
