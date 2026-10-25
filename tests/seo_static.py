@@ -56,4 +56,9 @@ assert all(u.startswith(BASE) and not urlsplit(u).fragment for u in urls),'Bad s
 assert 'Sitemap: '+BASE+'sitemap.xml' in (ROOT/'robots.txt').read_text(),'Robots sitemap mismatch'
 for name in ['options.html','compare-performance.html','privacy.html','terms.html']:
     assert any('noindex' in r for r in pages[name].robots),(name,'beta/legal noindex lost')
+# These reviewed tools have passed the release gate and must remain discoverable.
+for name in ['family-school-costs.html','family-college-paths.html','money-cash-goals.html']:
+    assert not any('noindex' in r for r in pages[name].robots),(name,'released tool unexpectedly noindex')
+    assert BASE+name in urls,(name,'released tool missing from sitemap')
+    assert 'draft calculator' not in (ROOT/name).read_text().lower(),(name,'released tool retains draft notice')
 print(f'PASS: {len(pages)} unique titles/descriptions/canonicals; {len(urls)} indexable sitemap URLs; {link_count} local links/fragments; noindex preserved.')
