@@ -1,5 +1,10 @@
 name: Refresh ETF benchmark history
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/benchmarks.yml'
+      - 'scripts/update_benchmarks.py'
   workflow_dispatch:
   schedule:
     - cron: '35 2 * * 2-6'
