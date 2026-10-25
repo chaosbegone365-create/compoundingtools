@@ -3,7 +3,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const root=path.join(__dirname,'..');
 function context(file){
  const html=fs.readFileSync(path.join(root,file),'utf8'),elements=new Map(),inputs=[];
- function node(){return {value:'',textContent:'',innerHTML:'',children:[],addEventListener(){},setAttribute(){},appendChild(child){this.children.push(child)},replaceChildren(...children){this.children=children},scrollIntoView(){}};}
+ function node(){return {value:'',textContent:'',innerHTML:'',children:[],addEventListener(){},setAttribute(){},appendChild(child){this.children.push(child)},append(...children){this.children.push(...children)},replaceChildren(...children){this.children=children},scrollIntoView(){}};}
  const el=id=>{if(!elements.has(id))elements.set(id,node());return elements.get(id)};
  for(const match of html.matchAll(/<(input|select)\b[^>]*>/g)){const id=match[0].match(/id="([^"]+)"/)?.[1];if(id){el(id).value=match[0].match(/value="([^"]*)"/)?.[1]||'';if(match[1]==='input')inputs.push(el(id));}}
  el('kind').value='call';
@@ -19,7 +19,7 @@ check('mortgage zero interest',()=>assert.equal(mortgage.run('mortgagePayment(12
 check('mortgage tiny positive interest',()=>assert(Math.abs(mortgage.run('mortgagePayment(120000,1e-14,10)')-1000)<1e-8));
 check('mortgage zero loan',()=>assert.equal(mortgage.run('mortgagePayment(0,6,30)'),0));
 for(const expression of ['mortgagePayment(1000,6,0)','mortgagePayment(1000,-1,10)','mortgagePayment(Infinity,6,30)','mortgagePayment(1e308,1e308,1)'])check('mortgage invalid/range '+expression,()=>assert(Number.isNaN(mortgage.run(expression))));
-check('mortgage blank rejected',()=>{mortgage.set('f0','');assert.match(mortgage.run('compute()'),/required/)});
+check('mortgage blank rejected',()=>{mortgage.set('price','');mortgage.run('calc()');assert.match(mortgage.el('answer').textContent,/required/);assert.equal(mortgage.el('costs').children.length,0);assert.equal(mortgage.el('analysis').children.length,0)});
 const options=context('options.html');
 check('options ordinary call payoff',()=>assert.equal(options.el('profit').textContent,'$400.00'));
 check('Black Scholes independent reference',()=>assert(Math.abs(options.run("bs('call',100,100,1,.2,.05,0)")-10.450583572185565)<.0001));

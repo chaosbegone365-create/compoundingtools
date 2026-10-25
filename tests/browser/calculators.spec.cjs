@@ -35,17 +35,20 @@ test('options: impossible put breakeven and fractional contracts clear results',
 
 test('mortgage: normal, tiny rate, zero rate, invalid and repeated live edits', async ({ page }) => {
   await page.goto('/home-mortgage.html');
-  await expect(page.locator('#answer')).toContainText('$2,212');
-  await field(page,'f0','120000'); await field(page,'f1','0'); await field(page,'f2','10');
-  await expect(page.locator('#answer')).toContainText('$1,000');
-  await field(page,'f1','0.00000000000001');
-  await expect(page.locator('#answer')).toContainText('$1,000');
-  await field(page,'f0','');
+  await expect(page.locator('#answer')).toContainText('principal and interest: $2,528');
+  await field(page,'price','120000'); await field(page,'down','0');
+  await field(page,'rate','0'); await field(page,'years','10');
+  await expect(page.locator('#answer')).toContainText('principal and interest: $1,000');
+  await field(page,'rate','0.00000000000001');
+  await expect(page.locator('#answer')).toContainText('principal and interest: $1,000');
+  await field(page,'price','');
   await expect(page.locator('#answer')).toHaveText('Please enter every required input.');
   await expect(page.locator('#answer')).not.toContainText('$1,000');
-  await field(page,'f0','240000'); await field(page,'f1','0');
-  await expect(page.locator('#answer')).toContainText('$2,000');
-  await expect(page.locator('#f0')).toBeVisible();
+  await expect(page.locator('#costs')).toBeEmpty();
+  await expect(page.locator('#analysis')).toBeEmpty();
+  await field(page,'price','240000'); await field(page,'rate','0');
+  await expect(page.locator('#answer')).toContainText('principal and interest: $2,000');
+  await expect(page.locator('#price')).toBeVisible();
 });
 
 test('investment growth: zero-return arithmetic and overflow handling', async ({ page }) => {
@@ -142,4 +145,54 @@ test('travel: recommendations, filters and keyboard details survive blocked map 
   await field(page,'people','0'); await page.locator('#discover').click();
   await expect(page.locator('#summary')).toContainText('valid');
   await expect(page.locator('#results article')).toHaveCount(0);
+});
+
+test('fitness costs: initialized cards, independent comparison, invalid clearing and recovery', async ({ page }) => {
+  await page.goto('/health-fitness.html');
+  await expect(page.locator('#options .tile')).toHaveCount(3);
+  await expect(page.locator('#answer')).toContainText('Lowest estimated cost:');
+  for (const [id,value] of Object.entries({gym:'50',joining:'0',travel:'0',home:'500',ongoing:'0',classprice:'20',weekly:'3',months:'12'})) await field(page,id,value);
+  await page.locator('#compare').click();
+  await expect(page.locator('#answer')).toContainText('Home equipment at $500 over 12 months');
+  await expect(page.locator('#options')).toContainText('$600 total');
+  await expect(page.locator('#options')).toContainText('$3,120 total');
+  await field(page,'months',''); await page.locator('#compare').click();
+  await expect(page.locator('#answer')).toContainText('Check inputs');
+  await expect(page.locator('#options')).toBeEmpty();
+  await expect(page.locator('#insight')).toBeEmpty();
+  await field(page,'months','12'); await page.locator('#compare').click();
+  await expect(page.locator('#options .tile')).toHaveCount(3);
+});
+
+test('workout schedule: initialized plan, settings update, invalid clearing and recovery', async ({ page }) => {
+  await page.goto('/health-workout.html');
+  await expect(page.locator('#plan article')).toHaveCount(7);
+  await page.locator('#equipment').selectOption('dumbbells');
+  await field(page,'days','4'); await field(page,'minutes','30');
+  await page.locator('#generate').click();
+  await expect(page.locator('#answer')).toContainText('4 scheduled workouts · 120 minutes');
+  await expect(page.locator('#plan')).toContainText('Goblet squats');
+  await field(page,'days','1'); await page.locator('#generate').click();
+  await expect(page.locator('#answer')).toContainText('Enter 2–6 workout days');
+  await expect(page.locator('#plan')).toBeEmpty();
+  await expect(page.locator('#copy')).toBeDisabled();
+  await field(page,'days','4'); await page.locator('#generate').click();
+  await expect(page.locator('#plan article')).toHaveCount(7);
+  await expect(page.locator('#copy')).toBeEnabled();
+});
+
+test('renovation: initialized budget, independent arithmetic, invalid clearing and recovery', async ({ page }) => {
+  await page.goto('/home-renovation.html');
+  await expect(page.locator('#details .tile')).toHaveCount(4);
+  await expect(page.locator('#answer')).toContainText('Illustrative project budget:');
+  for (const [id,value] of Object.entries({area:'100',materials:'10',labor:'20',permits:'500',contingency:'10',saved:'500',months:'10'})) await field(page,id,value);
+  await page.locator('#run').click();
+  await expect(page.locator('#answer')).toContainText('$3,850');
+  await expect(page.locator('#answer')).toContainText('$335/month');
+  await expect(page.locator('#answer')).toContainText('remaining $3,350');
+  await field(page,'months','0'); await page.locator('#run').click();
+  await expect(page.locator('#answer')).toContainText('Please enter valid project details.');
+  await expect(page.locator('#details')).toBeEmpty();
+  await field(page,'months','10'); await page.locator('#run').click();
+  await expect(page.locator('#details .tile')).toHaveCount(4);
 });

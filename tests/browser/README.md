@@ -23,7 +23,7 @@ Repository visibility was verified public on October 25, 2026. GitHub states sta
 
 ## Evidence limits
 
-Local validation: configuration/scripts parse, locked `npm ci` succeeds, and `playwright test --list` discovers 16 cases. Browser execution has NOT been performed in this restricted workspace. Only an actual successful CI run for the exact commit establishes these cases passed. It does not establish live production deployment, real ETF source availability, actual grocery prices, retailer-cart integration, search rankings or complete accessibility.
+Local validation: configuration/scripts parse, locked `npm ci` succeeds, and `playwright test --list` discovers 24 cases. Browser execution has NOT been performed in this restricted workspace. Only an actual successful CI run for the exact commit establishes these cases passed. It does not establish live production deployment, real ETF source availability, actual grocery prices, retailer-cart integration, search rankings or complete accessibility.
 
 Sources inspected:
 - https://docs.github.com/en/billing/concepts/product-billing/github-actions
@@ -31,3 +31,5 @@ Sources inspected:
 - https://www.npmjs.com/package/%40playwright/test?activeTab=versions
 - https://playwright.dev/docs/ci-intro
 - https://playwright.dev/docs/test-webserver
+
+Concurrent-main reconciliation adds expanded all-in mortgage, fitness comparison, workout schedule and renovation initialization/invalid-state checks. Layout also checks controls stay within their field tracks. The 24 discovered cases still require an actual exact-commit CI run.

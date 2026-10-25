@@ -46,3 +46,9 @@ Preserve GitHub Pages, domain email, premium design, existing URLs and AdSense v
 - [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
 - [OIC long put explanation](https://prd-web.optionseducation.org/strategies/all-strategies/long-put)
 - [CFPB mortgage payment explanation](https://www.consumerfinance.gov/ask-cfpb/on-a-mortgage-whats-the-difference-between-my-principal-and-interest-payment-and-my-total-monthly-payment-en-1941/)
+
+## Concurrent-page reconciliation (local review, not a release)
+
+Preserved the expanded workout, fitness, all-in mortgage and renovation planners from main through `ba59f93a4145154fd56bfe5ee27abc59e8fd345a`, including homebuyer resources. Repaired malformed document/script boundaries on the four pages; added single-document structural checks. Preserved subsequent Yahoo feedback and Expedia handoff/disclosure edits through main `3d4d870f5f24ca913ef3d59c9dabe4c708e24adb`.
+
+The sitemap now covers 20 indexable URLs across 24 HTML documents. The mortgage retains all-in housing costs and upfront cash while using stable tiny-rate math, finite validation and stale-output clearing. Workout cardio now fits the 15-minute minimum time budget; invalid plans cannot copy a stale schedule. Fitness and renovation reject numeric overflow. Browser checks must pass on the integrated commit before publication; local static results do not establish browser or live-release success.

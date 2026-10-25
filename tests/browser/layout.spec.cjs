@@ -4,12 +4,15 @@ const ORIGIN = 'http://127.0.0.1:4173';
 const benchmark = { updated:'2025-01-06T00:00:00Z', series:{ SPY:[['2025-01-02',100],['2025-01-06',110]] } };
 const pages = [
   { path:'/', controls:['#initial', 'button[onclick="calcGrowth()"]'] },
-  { path:'/home-mortgage.html', controls:['#f0', '#calc button[type=submit]'] },
+  { path:'/home-mortgage.html', controls:['#price', '#calculate'] },
   // Options recalculates live and has no primary action button.
   { path:'/options.html', controls:['#current', '#kind'] },
   { path:'/compare-performance.html', controls:['#portfolioFile', '#download'], comparison:true },
   { path:'/health-meal-planner.html', controls:['#people', '#plan'] },
-  { path:'/travel-budget.html', controls:['#budget', '#discover'] }
+  { path:'/travel-budget.html', controls:['#budget', '#discover'] },
+  { path:'/health-fitness.html', controls:['#gym', '#compare'] },
+  { path:'/health-workout.html', controls:['#days', '#generate'] },
+  { path:'/home-renovation.html', controls:['#area', '#run'] }
 ];
 async function noDocumentOverflow(page) {
   const dimensions = await page.evaluate(() => ({
@@ -20,6 +23,16 @@ async function noDocumentOverflow(page) {
   // One CSS pixel permits subpixel rounding, not actual horizontal page scrolling.
   expect(dimensions.document, JSON.stringify(dimensions)).toBeLessThanOrEqual(dimensions.viewport + 1);
   expect(dimensions.body, JSON.stringify(dimensions)).toBeLessThanOrEqual(dimensions.viewport + 1);
+}
+async function fieldsStayInTheirGridTracks(page) {
+  const escaped = await page.locator('.fields label').evaluateAll(labels => labels.flatMap(label => {
+    const bounds = label.getBoundingClientRect();
+    return [...label.querySelectorAll('input,select,textarea')].filter(control => {
+      const rect = control.getBoundingClientRect();
+      return rect.width && (rect.left < bounds.left - 1 || rect.right > bounds.right + 1);
+    }).map(control => ({ id:control.id, label:bounds.toJSON(), control:control.getBoundingClientRect().toJSON() }));
+  }));
+  expect(escaped, 'Field controls must stay inside their label/grid track, not overlap neighboring fields').toEqual([]);
 }
 async function keyboardReach(page, selectors) {
   const remaining = new Set(selectors);
@@ -71,6 +84,7 @@ test('key pages: no page-wide horizontal overflow and primary controls keyboard 
         await expect(page.locator('#download')).toBeEnabled();
       }
       await noDocumentOverflow(page);
+      await fieldsStayInTheirGridTracks(page);
       await keyboardReach(page, item.controls);
       await noDocumentOverflow(page);
     });

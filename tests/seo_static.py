@@ -29,6 +29,8 @@ pages={p.name:Page(p.read_text()) for p in ROOT.glob('*.html')}
 assert pages, 'No HTML pages found'
 seen_titles=set(); seen_descriptions=set(); link_count=0
 for name,p in pages.items():
+    raw=(ROOT/name).read_text()
+    assert '</html<script>' not in raw and raw.count('</body>')==1 and raw.count('</html>')==1,(name,'malformed document/script structure')
     assert p.canonicals==[BASE+('' if name=='index.html' else name)], (name,'canonical')
     assert p.title and p.title not in seen_titles,(name,'missing/duplicate title')
     seen_titles.add(p.title)
