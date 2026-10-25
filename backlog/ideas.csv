@@ -1,0 +1,21 @@
+id,division,title,status,priority
+CT001,Career,Am I Underpaid,idea,1
+CT002,Wealth,How Rich Am I for My Age,idea,1
+CT003,Family,Could We Live on One Income,idea,1
+CT004,Retirement,Coast FIRE Calculator,idea,1
+CT005,Travel,Vacation Budget Builder,idea,1
+CT006,Income,Instagram Influencer Earnings,idea,2
+CT007,Income,Barre Instructor Earnings,idea,2
+CT008,Family,Bank of Mom and Dad Calculator,idea,2
+CT009,Education,Was My College Degree Worth It,idea,2
+CT010,Career,Should I Take That Job Offer,idea,2
+CT011,Investing,When Will I Become a Millionaire,idea,2
+CT012,Family,Free Childcare Advantage,idea,2
+CT013,Benefits,401k Employer Match Decoder,idea,2
+CT014,Benefits,RSU Sell or Hold Scenario,idea,2
+CT015,Health,Calorie Needs Estimator,idea,3
+CT016,Health,Protein Intake Calculator,idea,3
+CT017,Housing,City to Suburbs Calculator,idea,3
+CT018,Travel,Travel Points Value Calculator,idea,3
+CT019,Retirement,Barista FIRE Calculator,idea,3
+CT020,Education,Big Ten Degree ROI,idea,3
