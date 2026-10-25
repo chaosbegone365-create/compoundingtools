@@ -40,18 +40,18 @@ for(const bp of [1,123,725,9999,10000])for(const price of [999999.99,123456.78,.
  const c=BigInt(Math.round(price*100)),base=c*(1n+365n+100n*366n+1n),buffer=(base*BigInt(bp)+5000n)/10000n;
  eq(z.total,Number(base+buffer));eq(z.contingency,Number(buffer));
 }
-const html=fs.readFileSync(path.join(__dirname,'../travel-quote-tradeoffs.html'),'utf8');eq((html.match(/https:\/\/expedia.com\/affiliate\/3DafBAM/g)||[]).length,1);eq(html.includes('noindex,follow'),true);eq(html.includes('not transferred'),true);
+const html=fs.readFileSync(path.join(__dirname,'../travel-quote-tradeoffs.html'),'utf8');eq((html.match(/https:\/\/expedia.com\/affiliate\/3DafBAM/g)||[]).length,1);eq(html.includes('<meta name="robots" content="index,follow">'),true);eq(html.includes('not transferred'),true);
 // Integrated journey contracts: one catalog source, current navigation, private sharing,
-// draft noindex, unchanged generic affiliate handoff, and no tracking/backend added.
+// released indexability, unchanged generic affiliate handoff, and no tracking/backend added.
 const {catalog,search}=require('../assets/tool-search.js');
 const tool=catalog.filter(t=>t.id==='trip-quote-tradeoffs');eq(tool.length,1);eq(tool[0].href,'travel-quote-tradeoffs.html');eq(tool[0].category,'Travel');
 for(const query of ['trip quotes','hard budget alternatives','airfare ceiling'])eq(search(query)[0].id,tool[0].id);
-eq(html.includes('Draft calculator.'),true);eq(html.includes("sets B to one fewer night and allowance day than A"),true);eq(html.includes("reduces A's duration"),false);
+eq(html.includes('Draft calculator.'),false);eq(html.includes('Fictional examples, not available offers.'),true);eq(html.includes("sets B to one fewer night and allowance day than A"),true);eq(html.includes("reduces A's duration"),false);
 eq(html.includes('rel="sponsored nofollow noopener noreferrer"'),true);
 eq((html.match(/data-share-tool/g)||[]).length,1);eq(html.includes('assets/share-tools.js'),true);eq(html.includes('Only the page link is shared—not your inputs or results.'),true);
 const share=require('../assets/share-tools.js');eq(share.canonicalURL({querySelector:()=>({href:'https://compoundyourfuture.com/travel-quote-tradeoffs.html?budget=4000#private'})}),'https://compoundyourfuture.com/travel-quote-tradeoffs.html');
-eq(fs.readFileSync(path.join(__dirname,'../sitemap.xml'),'utf8').includes('travel-quote-tradeoffs.html'),false);
+eq(fs.readFileSync(path.join(__dirname,'../sitemap.xml'),'utf8').includes('travel-quote-tradeoffs.html'),true);
 const hub=fs.readFileSync(path.join(__dirname,'../travel.html'),'utf8');eq((hub.match(/class="tile" href="travel-quote-tradeoffs.html"/g)||[]).length,1);
-eq(hub.includes('Draft tool. See all-in costs'),true);eq(hub.includes('class="tile" href="travel-budget.html"'),true);eq(hub.includes('class="tile" href="travel-savings.html"'),true);
+eq(hub.includes('Draft tool.'),false);eq(hub.includes('See all-in costs, airfare ceilings and shorter alternatives'),true);eq(hub.includes('class="tile" href="travel-budget.html"'),true);eq(hub.includes('class="tile" href="travel-savings.html"'),true);
 for(const file of ['assets/trip-quotes-model.js','assets/trip-quotes-ui.js'])eq(/\b(?:fetch|XMLHttpRequest|localStorage|sessionStorage|sendBeacon)\b/.test(fs.readFileSync(path.join(__dirname,'..',file),'utf8')),false);
 console.log(checks+' arithmetic, validation, content and integration checks passed');

@@ -65,12 +65,12 @@ test('optional exact affiliate link is disclosed, never exercised, and responsiv
  await page.locator('#party').focus();await page.keyboard.press('Tab');await expect(page.locator('#budget')).toBeFocused();
 });
 
-test('draft quote comparison is reachable from search and the Vacations hub',async({page})=>{
+test('released quote comparison is reachable from search and the Vacations hub',async({page})=>{
  await page.goto('/');await page.locator('#site-search').fill('trip quotes');
  const result=page.locator('#tool-search-results a').first();await expect(result).toHaveAttribute('href','travel-quote-tradeoffs.html');
  await result.click();await expect(page).toHaveURL(/travel-quote-tradeoffs\.html$/);
- await expect(page.getByText('Draft calculator. Fictional examples, not available offers.',{exact:true})).toBeVisible();
- await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
+ await expect(page.getByText('Fictional examples, not available offers.',{exact:true})).toBeVisible();
+ await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','index,follow');
  await expect(page.locator('#cyf-sidebar a[aria-current="page"]')).toHaveAttribute('href','travel-quote-tradeoffs.html');
  await expect(page.locator('#cyf-sidebar details').filter({has:page.locator('a[href="travel-quote-tradeoffs.html"]')})).toHaveAttribute('open','');
  await page.goBack();await expect(page).toHaveURL(/\/$/);
