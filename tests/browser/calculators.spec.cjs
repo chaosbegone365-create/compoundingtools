@@ -41,7 +41,7 @@ test('mortgage: normal, tiny rate, zero rate, invalid and repeated live edits', 
   await field(page,'f1','0.00000000000001');
   await expect(page.locator('#answer')).toContainText('$1,000');
   await field(page,'f0','');
-  await expect(page.locator('#answer')).toContainText('valid');
+  await expect(page.locator('#answer')).toHaveText('Please enter every required input.');
   await expect(page.locator('#answer')).not.toContainText('$1,000');
   await field(page,'f0','240000'); await field(page,'f1','0');
   await expect(page.locator('#answer')).toContainText('$2,000');
