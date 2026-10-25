@@ -1,20 +1,194 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><meta name="description" content="Upload your portfolio and benchmark CSVs to compare historical investment performance."><title>Did You Beat the Market? | Compound Your Future</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><meta name="description" content="Upload a portfolio CSV and select an ETF benchmark. Historical comparisons require available benchmark data and matching dates."><title>Did You Beat the Market? | Compound Your Future</title><style>
 :root{font-family:system-ui,-apple-system,sans-serif;background:#f7faf8;color:#17333d}*{box-sizing:border-box}body{margin:0}header{background:white;border-bottom:1px solid #e0e9e4;padding:20px max(22px,calc((100% - 1100px)/2))}a{color:#087d62}header a{font-size:21px;font-weight:850;text-decoration:none}main{max-width:1100px;margin:auto;padding:42px 22px}h1{font-size:clamp(32px,5vw,52px);letter-spacing:-2px;margin:8px 0}p{line-height:1.7;color:#5d727b}.eyebrow{color:#098b6b;font-size:12px;font-weight:800;letter-spacing:1.5px}.panel{background:white;border:1px solid #e0eae3;border-radius:20px;padding:26px;margin:24px 0;box-shadow:0 8px 30px #173b290a}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.drop{border:2px dashed #b9d7c9;border-radius:15px;background:#f3faf6;padding:28px;text-align:center;cursor:pointer}.drop.drag{background:#ddf5e8;border-color:#089a73}.drop strong{display:block;font-size:18px;margin-bottom:8px}.drop small{display:block;color:#607a73;margin-top:8px}.drop input{max-width:100%;margin-top:15px}label{font-weight:750;font-size:14px}select{padding:12px;border:1px solid #bcd2c8;border-radius:10px;font:inherit;margin:9px 0;width:100%}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.metric{background:#edf8f1;border-radius:14px;padding:20px}.metric span{font-size:12px;color:#557569}.metric strong{display:block;font-size:27px;margin-top:8px;color:#087658}canvas{width:100%;height:340px;display:block}.error{color:#9a3333;font-weight:700}.muted{color:#657b82;font-size:13px}button{border:0;background:#0c9472;color:white;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.hidden{display:none}footer{background:#102e40;color:white;text-align:center;padding:32px;margin-top:50px}footer a{color:#b4e7d5}@media(max-width:700px){.grid,.results{grid-template-columns:1fr}.panel{padding:19px}canvas{height:270px}}
-.benchmark-choice{border:1px solid #d9e8df;border-radius:15px;padding:26px;background:linear-gradient(135deg,#f4faf6,#edf7f3)}.benchmark-choice label{display:block;font-size:15px;font-weight:800;color:#21443f}.benchmark-choice select{display:block;margin:14px 0 10px;width:100%;background:white;border:1px solid #b9d5c8;border-radius:10px;padding:13px;font:700 15px system-ui;color:#183e39}.benchmark-tip{margin-top:25px;border-top:1px solid #d7e8dc;padding-top:20px}.benchmark-tip strong{color:#087d62}.benchmark-tip p{font-size:13px;margin-bottom:0}</style><link rel="stylesheet" href="assets/premium.css"></head><body><header><a class="brand-link" href="./" aria-label="Compound Your Future home"><span class="brand-icon" aria-hidden="true">↗</span><span>Compound <span class="brand-emphasis">Your Future</span></span></a></header><main><div class="eyebrow">INVESTING · PERFORMANCE LAB</div><h1>Did you beat the market?</h1><p>Drop in your portfolio's historical values and a benchmark's historical prices. Compare growth on the same dates—without sending your files to a server.</p><section class="panel"><div class="grid"><div class="drop" id="portfolioDrop" tabindex="0" role="button" aria-label="Upload portfolio CSV"><strong>↥ Your portfolio CSV</strong><span>Drag & drop or choose a file</span><small>date,value · e.g. 2025-01-02,10000</small><input id="portfolioFile" type="file" accept=".csv,text/csv"><small id="portfolioStatus">No file selected</small></div><div class="benchmark-choice"><label for="benchmarkSelect">Choose a benchmark ETF</label><select id="benchmarkSelect"><option value="SPY">SPY · S&P 500 ETF</option><option value="VOO">VOO · Vanguard S&P 500 ETF</option><option value="QQQ">QQQ · Nasdaq-100 ETF</option><option value="VTI">VTI · Total US Stock Market</option><option value="IWM">IWM · Russell 2000 ETF</option><option value="DIA">DIA · Dow Jones ETF</option></select><p id="benchmarkStatus" class="muted" role="status">Loading historical benchmark prices…</p><div class="benchmark-tip"><strong>One-click comparison</strong><p>Historical benchmark prices are refreshed automatically when the data service is available. No benchmark upload required.</p></div></div></div><p class="muted">Portfolio values must exclude deposits and withdrawals during the comparison period. Benchmark prices are historical daily series, not live quotes. This comparison is price-based unless the source explicitly supplies adjusted total-return prices.</p><p id="message" role="status"></p></section>
-<section class="panel hidden" id="output"><h2>Performance comparison</h2><p id="period" class="muted"></p><div class="results"><div class="metric"><span>Portfolio return</span><strong id="portfolioReturn">—</strong></div><div class="metric"><span>Benchmark return</span><strong id="benchmarkReturn">—</strong></div><div class="metric"><span>Outperformance</span><strong id="difference">—</strong></div></div><h3>Growth of $10,000</h3><canvas id="chart" role="img" aria-label="Line chart comparing normalized portfolio and benchmark performance"></canvas><p id="detail" class="muted"></p><button id="download">Download comparison CSV</button></section>
+.benchmark-choice{border:1px solid #d9e8df;border-radius:15px;padding:26px;background:linear-gradient(135deg,#f4faf6,#edf7f3)}.benchmark-choice label{display:block;font-size:15px;font-weight:800;color:#21443f}.benchmark-choice select{display:block;margin:14px 0 10px;width:100%;background:white;border:1px solid #b9d5c8;border-radius:10px;padding:13px;font:700 15px system-ui;color:#183e39}.benchmark-tip{margin-top:25px;border-top:1px solid #d7e8dc;padding-top:20px}.benchmark-tip strong{color:#087d62}.benchmark-tip p{font-size:13px;margin-bottom:0}</style><link rel="stylesheet" href="assets/premium.css"><link rel="canonical" href="https://compoundyourfuture.com/compare-performance.html"></head><body><header><a class="brand-link" href="./" aria-label="Compound Your Future home"><span class="brand-icon" aria-hidden="true">↗</span><span>Compound <span class="brand-emphasis">Your Future</span></span></a></header><main><div class="eyebrow">INVESTING · PERFORMANCE LAB</div><h1>Did you beat the market?</h1><p>Drop in your portfolio's historical values and choose an ETF benchmark. Compare growth on matching dates—without sending your portfolio file to a server.</p><section class="panel"><div class="grid"><div class="drop" id="portfolioDrop" tabindex="0" role="button" aria-label="Upload portfolio CSV"><strong>↥ Your portfolio CSV</strong><span>Drag & drop or choose a file</span><small>date,value · e.g. 2025-01-02,10000</small><input id="portfolioFile" type="file" accept=".csv,text/csv"><small id="portfolioStatus">No file selected</small></div><div class="benchmark-choice"><label for="benchmarkSelect">Choose a benchmark ETF</label><select id="benchmarkSelect"><option value="SPY">SPY · S&P 500 ETF</option><option value="VOO">VOO · Vanguard S&P 500 ETF</option><option value="QQQ">QQQ · Nasdaq-100 ETF</option><option value="VTI">VTI · Total US Stock Market</option><option value="IWM">IWM · Russell 2000 ETF</option><option value="DIA">DIA · Dow Jones ETF</option></select><p id="benchmarkStatus" class="muted" role="status">Loading historical benchmark prices…</p><div class="benchmark-tip"><strong>One-click comparison</strong><p>Historical benchmark prices are refreshed when the data provider is available. Coverage and freshness are shown above. No benchmark upload required.</p></div></div></div><p class="muted">Portfolio values must exclude deposits and withdrawals during the comparison period. Benchmark prices are historical daily series, not live quotes. This comparison is price-based unless the source explicitly supplies adjusted total-return prices.</p><p id="message" role="status"></p></section>
+<section class="panel hidden" id="output"><h2>Performance comparison</h2><p id="period" class="muted"></p><div class="results"><div class="metric"><span>Portfolio return</span><strong id="portfolioReturn">—</strong></div><div class="metric"><span>Benchmark return</span><strong id="benchmarkReturn">—</strong></div><div class="metric"><span>Outperformance</span><strong id="difference">—</strong></div></div><h3>Growth of $10,000</h3><canvas id="chart" role="img" aria-label="Line chart comparing normalized portfolio and benchmark performance"></canvas><p id="detail" class="muted"></p><button id="download" disabled>Download comparison CSV</button></section>
 <section class="panel"><h2>How to prepare your files</h2><p>Export historical portfolio values from your brokerage or spreadsheet, with a date and a total value on each row. Select a benchmark above; no ETF file is required. Your portfolio file is processed locally in your browser.</p><p><strong>Important:</strong> A portfolio balance series with deposits, withdrawals, or transfers is not a valid investment return series. This initial tool cannot calculate time-weighted or money-weighted returns. We plan to add transaction imports and cash-flow adjustment later.</p><p class="muted">For educational comparison only. Not investment advice. Past performance does not predict future results.</p></section><a href="./">← All tools</a></main><footer>Compound Your Future · Your Information. Your Decision. · <a href="privacy.html">Privacy</a> · <a href="methodology.html">Methodology</a></footer>
 <script>
-const state={portfolio:null,benchmark:null,rows:[],benchmarks:null};const el=id=>document.getElementById(id);
-function parseCSV(text,kind){const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/).filter(Boolean);if(lines.length<3)throw Error('CSV needs a header and at least two rows.');const headers=lines[0].split(',').map(x=>x.trim().toLowerCase().replace(/["\s-]/g,'_'));const di=headers.findIndex(x=>['date','day','timestamp'].includes(x));const names=kind==='portfolio'?['value','portfolio_value','balance','total_value']:['adj_close','adjusted_close','adjclose','close','price'];const vi=headers.findIndex(x=>names.includes(x));if(di<0||vi<0)throw Error('Missing date and '+(kind==='portfolio'?'value':'close or adj_close')+' columns.');const map=new Map();for(const line of lines.slice(1)){const cells=line.split(',').map(x=>x.trim().replace(/^"|"$/g,''));const date=cells[di];const v=Number(cells[vi].replace(/[$,]/g,''));if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date+'T00:00:00Z'))||!Number.isFinite(v)||v<=0)continue;map.set(date,v)}if(map.size<2)throw Error('Need at least two valid positive-value dated observations.');return map}
-async function receive(file,kind){if(!file)return;if(file.size>3000000){el('message').textContent='File exceeds the 3 MB limit.';return}try{state[kind]=parseCSV(await file.text(),kind);el(kind+'Status').textContent=file.name+' · '+state[kind].size+' rows';el('message').textContent='';compare()}catch(e){state[kind]=null;el(kind+'Status').textContent='Invalid file';el('message').className='error';el('message').textContent=e.message;el('output').classList.add('hidden')}}
-for(const kind of ['portfolio']){const input=el(kind+'File'),drop=el(kind+'Drop');input.addEventListener('change',()=>receive(input.files[0],kind));drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag')});drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');receive(e.dataTransfer.files[0],kind)});drop.addEventListener('keydown',e=>{if(e.target===drop&&(e.key==='Enter'||e.key===' ')){e.preventDefault();input.click()}})}
-async function loadBenchmarks(){const status=el('benchmarkStatus');try{const response=await fetch('./data/benchmarks.json',{cache:'no-cache'});if(!response.ok)throw Error('Historical ETF dataset is not published yet.');const data=await response.json();if(!data||!data.series)throw Error('Benchmark data is incomplete.');state.benchmarks=data;setBenchmark()}catch(e){state.benchmark=null;status.textContent='Benchmark data unavailable: '+e.message;el('message').textContent='Portfolio upload still works, but the chart needs a verified benchmark dataset.';el('output').classList.add('hidden')}}function setBenchmark(){const symbol=el('benchmarkSelect').value;const data=state.benchmarks?.series?.[symbol];if(!Array.isArray(data)||data.length<2){state.benchmark=null;el('benchmarkStatus').textContent='No historical data currently available for '+symbol;el('output').classList.add('hidden');return}state.benchmark=new Map(data.filter(row=>Array.isArray(row)&&typeof row[0]==='string'&&Number.isFinite(row[1])&&row[1]>0));el('benchmarkStatus').textContent=symbol+' · '+state.benchmark.size+' historical observations · dataset updated '+(state.benchmarks.updated||'date unavailable');compare()}el('benchmarkSelect').addEventListener('change',setBenchmark);loadBenchmarks();function pct(n){return(n>=0?'+':'')+(n*100).toFixed(2)+'%'}function compare(){if(!state.portfolio||!state.benchmark)return;const dates=[...state.portfolio.keys()].filter(d=>state.benchmark.has(d)).sort();if(dates.length<2){el('message').className='error';el('message').textContent='Not enough exact matching dates. Use the same observation dates in both CSV files.';el('output').classList.add('hidden');return}const p0=state.portfolio.get(dates[0]),b0=state.benchmark.get(dates[0]);state.rows=dates.map(d=>({date:d,portfolio:10000*state.portfolio.get(d)/p0,benchmark:10000*state.benchmark.get(d)/b0}));const last=state.rows.at(-1),pr=last.portfolio/10000-1,br=last.benchmark/10000-1;el('portfolioReturn').textContent=pct(pr);el('benchmarkReturn').textContent=pct(br);el('difference').textContent=pct(pr-br)+' pts';el('period').textContent=dates[0]+' to '+dates.at(-1)+' · '+dates.length+' matching dates';el('detail').textContent='Ending value of $10,000: portfolio el('output').classList.remove('hidden');el('message').textContent='Comparison ready.';draw()}
-function draw(){const c=el('chart'),rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.round(rect.width*dpr);c.height=Math.round(rect.height*dpr);const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const w=rect.width,h=rect.height,pad=40;ctx.clearRect(0,0,w,h);const values=state.rows.flatMap(r=>[r.portfolio,r.benchmark]);let min=Math.min(...values),max=Math.max(...values);if(max===min){max+=1;min-=1}const x=i=>pad+i*(w-pad-15)/(state.rows.length-1),y=v=>h-pad-(v-min)/(max-min)*(h-2*pad);ctx.strokeStyle='#dce8e0';for(let i=0;i<4;i++){const yy=pad+i*(h-2*pad)/3;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-10,yy);ctx.stroke()}for(const [key,color] of [['portfolio','#0a9c77'],['benchmark','#466fbd']]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=3;state.rows.forEach((r,i)=>i?ctx.lineTo(x(i),y(r[key])):ctx.moveTo(x(i),y(r[key])));ctx.stroke()}ctx.fillStyle='#0a9c77';ctx.font='13px sans-serif';ctx.fillText('Portfolio',pad,20);ctx.fillStyle='#466fbd';ctx.fillText('Benchmark',pad+90,20)}
-window.addEventListener('resize',()=>{if(state.rows.length)draw()});el('download').addEventListener('click',()=>{const csv='date,portfolio_normalized,benchmark_normalized\n'+state.rows.map(r=>[r.date,r.portfolio.toFixed(4),r.benchmark.toFixed(4)].join(',')).join('\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download='Compound Your Future-comparison.csv';a.click();URL.revokeObjectURL(url)});
-</script></body></html>+last.portfolio.toFixed(2)+'; '+el('benchmarkSelect').value+' el('output').classList.remove('hidden');el('message').textContent='Comparison ready.';draw()}
-function draw(){const c=el('chart'),rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.round(rect.width*dpr);c.height=Math.round(rect.height*dpr);const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const w=rect.width,h=rect.height,pad=40;ctx.clearRect(0,0,w,h);const values=state.rows.flatMap(r=>[r.portfolio,r.benchmark]);let min=Math.min(...values),max=Math.max(...values);if(max===min){max+=1;min-=1}const x=i=>pad+i*(w-pad-15)/(state.rows.length-1),y=v=>h-pad-(v-min)/(max-min)*(h-2*pad);ctx.strokeStyle='#dce8e0';for(let i=0;i<4;i++){const yy=pad+i*(h-2*pad)/3;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-10,yy);ctx.stroke()}for(const [key,color] of [['portfolio','#0a9c77'],['benchmark','#466fbd']]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=3;state.rows.forEach((r,i)=>i?ctx.lineTo(x(i),y(r[key])):ctx.moveTo(x(i),y(r[key])));ctx.stroke()}ctx.fillStyle='#0a9c77';ctx.font='13px sans-serif';ctx.fillText('Portfolio',pad,20);ctx.fillStyle='#466fbd';ctx.fillText('Benchmark',pad+90,20)}
-window.addEventListener('resize',()=>{if(state.rows.length)draw()});el('download').addEventListener('click',()=>{const csv='date,portfolio_normalized,benchmark_normalized\n'+state.rows.map(r=>[r.date,r.portfolio.toFixed(4),r.benchmark.toFixed(4)].join(',')).join('\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download='Compound Your Future-comparison.csv';a.click();URL.revokeObjectURL(url)});
-</script></body></html>+last.benchmark.toFixed(2)+'. Benchmark values reflect the data provider’s historical price series, not necessarily total return including reinvested dividends.';el('output').classList.remove('hidden');el('message').textContent='Comparison ready.';draw()}
-function draw(){const c=el('chart'),rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.round(rect.width*dpr);c.height=Math.round(rect.height*dpr);const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const w=rect.width,h=rect.height,pad=40;ctx.clearRect(0,0,w,h);const values=state.rows.flatMap(r=>[r.portfolio,r.benchmark]);let min=Math.min(...values),max=Math.max(...values);if(max===min){max+=1;min-=1}const x=i=>pad+i*(w-pad-15)/(state.rows.length-1),y=v=>h-pad-(v-min)/(max-min)*(h-2*pad);ctx.strokeStyle='#dce8e0';for(let i=0;i<4;i++){const yy=pad+i*(h-2*pad)/3;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-10,yy);ctx.stroke()}for(const [key,color] of [['portfolio','#0a9c77'],['benchmark','#466fbd']]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=3;state.rows.forEach((r,i)=>i?ctx.lineTo(x(i),y(r[key])):ctx.moveTo(x(i),y(r[key])));ctx.stroke()}ctx.fillStyle='#0a9c77';ctx.font='13px sans-serif';ctx.fillText('Portfolio',pad,20);ctx.fillStyle='#466fbd';ctx.fillText('Benchmark',pad+90,20)}
-window.addEventListener('resize',()=>{if(state.rows.length)draw()});el('download').addEventListener('click',()=>{const csv='date,portfolio_normalized,benchmark_normalized\n'+state.rows.map(r=>[r.date,r.portfolio.toFixed(4),r.benchmark.toFixed(4)].join(',')).join('\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));const a=document.createElement('a');a.href=url;a.download='Compound Your Future-comparison.csv';a.click();URL.revokeObjectURL(url)});
+'use strict';
+const state = {portfolio: null, benchmark: null, rows: [], benchmarks: null, uploadId: 0};
+const el = id => document.getElementById(id);
+const money = n => '$' + n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const pct = n => (n >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%';
+function validDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T00:00:00Z');
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+function clearResults() {
+  state.rows = [];
+  el('output').classList.add('hidden');
+  el('download').disabled = true;
+}
+function message(text, error = false) {
+  el('message').className = error ? 'error' : '';
+  el('message').textContent = text;
+}
+// Quoted fields may contain commas, escaped quotes, or newlines.
+function csvRows(text) {
+  const rows = []; let row = [], cell = '', quoted = false;
+  text = text.replace(/^\uFEFF/, '');
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') {
+      if (quoted && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (quoted) quoted = false;
+      else if (!cell.trim()) quoted = true;
+      else throw Error('Unexpected quote in CSV. Check the file format.');
+    } else if (c === ',' && !quoted) { row.push(cell.trim()); cell = ''; }
+    else if ((c === '\n' || c === '\r') && !quoted) {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell.trim()); if (row.some(v => v !== '')) rows.push(row);
+      row = []; cell = '';
+    } else cell += c;
+  }
+  if (quoted) throw Error('Unclosed quoted field in CSV.');
+  row.push(cell.trim()); if (row.some(v => v !== '')) rows.push(row);
+  return rows;
+}
+function parseCSV(text) {
+  const rows = csvRows(text);
+  if (rows.length < 3) throw Error('CSV needs a header and at least two rows.');
+  const headers = rows[0].map(s => s.toLowerCase().replace(/[\s-]+/g, '_'));
+  const di = headers.findIndex(s => ['date', 'day', 'timestamp'].includes(s));
+  const vi = headers.findIndex(s => ['value', 'portfolio_value', 'balance', 'total_value'].includes(s));
+  if (di < 0 || vi < 0) throw Error('Missing date and value columns. Use date,value headers.');
+  const values = new Map();
+  rows.slice(1).forEach((row, i) => {
+    const date = row[di], raw = row[vi];
+    const value = typeof raw === 'string' && raw !== '' ? Number(raw.replace(/[$,]/g, '')) : NaN;
+    if (!validDate(date) || !Number.isFinite(value) || value <= 0)
+      throw Error('Invalid date or positive value on CSV row ' + (i + 2) + '. Use YYYY-MM-DD dates.');
+    if (values.has(date)) throw Error('Duplicate date ' + date + '. Keep one portfolio value per date.');
+    values.set(date, value);
+  });
+  return values;
+}
+async function receive(file) {
+  if (!file) return;
+  const request = ++state.uploadId;
+  state.portfolio = null; clearResults(); message('Reading portfolio…');
+  try {
+    if (file.size > 3000000) throw Error('File exceeds the 3 MB limit.');
+    const text = await file.text();
+    if (request !== state.uploadId) return;
+    state.portfolio = parseCSV(text);
+    el('portfolioStatus').textContent = file.name + ' · ' + state.portfolio.size + ' rows';
+    compare();
+  } catch (error) {
+    if (request !== state.uploadId) return;
+    state.portfolio = null; clearResults();
+    el('portfolioStatus').textContent = 'Invalid file'; message(error.message, true);
+  }
+}
+const input = el('portfolioFile'), drop = el('portfolioDrop');
+input.addEventListener('change', () => receive(input.files[0]));
+drop.addEventListener('click', e => { if (e.target !== input) input.click(); });
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('drag'); receive(e.dataTransfer.files[0]); });
+drop.addEventListener('keydown', e => {
+  if (e.target === drop && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); input.click(); }
+});
+function benchmarkMap(rows) {
+  if (!Array.isArray(rows) || rows.length < 2) throw Error('Fewer than two historical observations.');
+  const values = new Map();
+  for (const row of rows) {
+    if (!Array.isArray(row) || !validDate(row[0]) || !Number.isFinite(row[1]) || row[1] <= 0 || values.has(row[0]))
+      throw Error('Historical data failed validation.');
+    values.set(row[0], row[1]);
+  }
+  return values;
+}
+async function loadBenchmarks() {
+  try {
+    const response = await fetch('./data/benchmarks.json', {cache: 'no-cache'});
+    if (!response.ok) throw Error('A verified historical ETF dataset has not been published.');
+    const data = await response.json();
+    if (!data || typeof data.series !== 'object' || data.series === null) throw Error('Benchmark data is incomplete.');
+    state.benchmarks = data; setBenchmark();
+  } catch (error) {
+    state.benchmarks = null; state.benchmark = null; clearResults();
+    el('benchmarkStatus').textContent = 'Benchmark data unavailable: ' + error.message;
+    message('You can select a portfolio file, but comparison is unavailable until verified ETF data is published.');
+  }
+}
+function setBenchmark() {
+  state.benchmark = null; clearResults();
+  const symbol = el('benchmarkSelect').value;
+  try {
+    state.benchmark = benchmarkMap(state.benchmarks?.series?.[symbol]);
+    const dates = [...state.benchmark.keys()].sort();
+    const meta = state.benchmarks.metadata?.[symbol] || {};
+    const refreshed = meta.fetched_at || (state.benchmarks.metadata ? 'unknown' : state.benchmarks.updated) || 'unknown';
+    el('benchmarkStatus').textContent = symbol + ' · ' + dates.length + ' observations · ' + dates[0] + ' to ' + dates.at(-1) + ' · last retrieved ' + refreshed + (meta.status === 'cached' ? ' (cached; latest refresh unavailable)' : '');
+    compare();
+  } catch (error) {
+    el('benchmarkStatus').textContent = symbol + ' data unavailable: ' + error.message;
+    message('Select an ETF with verified historical data to compare.', true);
+  }
+}
+function compare() {
+  clearResults();
+  if (!state.portfolio) { message('Upload your portfolio CSV to begin.'); return; }
+  if (!state.benchmark) { message('Portfolio loaded. Comparison is unavailable until verified ETF data is published.'); return; }
+  const dates = [...state.portfolio.keys()].filter(d => state.benchmark.has(d)).sort();
+  if (dates.length < 2) {
+    message('Not enough matching trading dates. Your portfolio needs at least two dates within the selected ETF’s available history.', true); return;
+  }
+  const p0 = state.portfolio.get(dates[0]), b0 = state.benchmark.get(dates[0]);
+  const rows = dates.map(date => ({date, portfolio: 10000 * (state.portfolio.get(date) / p0), benchmark: 10000 * (state.benchmark.get(date) / b0)}));
+  if (rows.some(r => !Number.isFinite(r.portfolio) || !Number.isFinite(r.benchmark))) {
+    message('Values are outside the supported numeric range.', true); return;
+  }
+  state.rows = rows;
+  const last = rows.at(-1), pr = last.portfolio / 10000 - 1, br = last.benchmark / 10000 - 1;
+  el('portfolioReturn').textContent = pct(pr);
+  el('benchmarkReturn').textContent = pct(br);
+  el('difference').textContent = (pr >= br ? '+' : '') + ((pr - br) * 100).toFixed(2) + ' pp';
+  el('period').textContent = dates[0] + ' to ' + dates.at(-1) + ' · ' + dates.length + ' matching dates';
+  el('detail').textContent = 'Ending value of $10,000: portfolio ' + money(last.portfolio) + '; ' + el('benchmarkSelect').value + ' ' + money(last.benchmark) + '. Historical price comparison, not necessarily total return with reinvested dividends.';
+  el('output').classList.remove('hidden'); el('download').disabled = false;
+  const omitted = state.portfolio.size - dates.length;
+  message('Comparison ready.' + (omitted ? ' ' + omitted + ' portfolio date(s) excluded because the ETF has no matching price.' : ''));
+  draw();
+}
+function draw() {
+  if (state.rows.length < 2 || el('output').classList.contains('hidden')) return;
+  const canvas = el('chart'), rect = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(rect.width * dpr); canvas.height = Math.round(rect.height * dpr);
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+  const w = rect.width, h = rect.height, left = 64, right = 14, top = 40, bottom = 36;
+  ctx.clearRect(0, 0, w, h);
+  let min = Infinity, max = -Infinity;
+  for (const row of state.rows) { min = Math.min(min, row.portfolio, row.benchmark); max = Math.max(max, row.portfolio, row.benchmark); }
+  if (min === max) { min -= 1; max += 1; }
+  const first = Date.parse(state.rows[0].date), last = Date.parse(state.rows.at(-1).date);
+  const x = date => left + (Date.parse(date) - first) / (last - first) * (w - left - right);
+  const y = value => h - bottom - (value - min) / (max - min) * (h - top - bottom);
+  ctx.font = '11px sans-serif';
+  for (let i = 0; i < 4; i++) {
+    const value = min + (max - min) * i / 3, yy = y(value);
+    ctx.strokeStyle = '#dce8e0'; ctx.beginPath(); ctx.moveTo(left, yy); ctx.lineTo(w - right, yy); ctx.stroke();
+    ctx.fillStyle = '#557569'; ctx.fillText('$' + Math.round(value).toLocaleString('en-US'), 2, yy + 4);
+  }
+  for (const [key, color] of [['portfolio', '#0a9c77'], ['benchmark', '#466fbd']]) {
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3;
+    state.rows.forEach((r, i) => i ? ctx.lineTo(x(r.date), y(r[key])) : ctx.moveTo(x(r.date), y(r[key]))); ctx.stroke();
+  }
+  ctx.fillStyle = '#0a9c77'; ctx.font = '13px sans-serif'; ctx.fillText('Portfolio', left, 20);
+  ctx.fillStyle = '#466fbd'; ctx.fillText(el('benchmarkSelect').value, left + 90, 20);
+  ctx.fillStyle = '#557569'; ctx.font = '11px sans-serif';
+  ctx.fillText(state.rows[0].date, left, h - 8); ctx.textAlign = 'right'; ctx.fillText(state.rows.at(-1).date, w - right, h - 8);
+  canvas.setAttribute('aria-label', 'Portfolio versus ' + el('benchmarkSelect').value + ', ' + el('period').textContent + '. ' + el('detail').textContent);
+}
+window.addEventListener('resize', draw);
+el('download').addEventListener('click', () => {
+  if (state.rows.length < 2) return;
+  const csv = 'date,portfolio_normalized,' + el('benchmarkSelect').value + '_normalized\n' + state.rows.map(r => [r.date, r.portfolio.toFixed(4), r.benchmark.toFixed(4)].join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8'}));
+  const a = document.createElement('a'); a.href = url; a.download = 'compound-your-future-comparison.csv';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+el('benchmarkSelect').addEventListener('change', setBenchmark);
+loadBenchmarks();
 </script></body></html>
