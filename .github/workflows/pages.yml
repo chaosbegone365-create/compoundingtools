@@ -25,7 +25,9 @@ jobs:
           node tests/comparison-unit.cjs
           node tests/household-regressions.cjs
           node tests/mortgage-content.cjs
-          node tests/planner-regressions.cjs
+          node tests/travel-regressions.cjs
+          node tests/meal-quantities.cjs
+          node tests/meal-review.cjs
           python3 tests/seo_static.py
       - uses: actions/configure-pages@v5
         with:

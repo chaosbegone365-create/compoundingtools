@@ -13,7 +13,7 @@ Tracks [issue #1](https://github.com/chaosbegone365-create/compoundingtools/issu
 
 ## Verification ledger
 
-Local integrated verification: 34 numerical/validation assertions, 19 comparison scenarios, 42 household cases, 11 mortgage content/input checks and 23 planner scenarios using synthetic fixtures and mocked DOM/canvas; 13 inline JavaScript blocks parse; technical SEO checks cover 23 pages, 19 indexable sitemap URLs and 174 local links/fragments. These are not browser, accessibility, search-ranking or revenue measurements.
+Local integrated verification: 34 numerical/validation assertions, 19 comparison scenarios, 42 household cases, 11 mortgage content/input checks and 6 travel scenarios, 44 measured-meal checks and 69 independent meal review probes using synthetic fixtures and mocked DOM/canvas; 13 inline JavaScript blocks parse; technical SEO checks cover 23 pages, 19 indexable sitemap URLs and 174 local links/fragments. These are not browser, accessibility, search-ranking or revenue measurements.
 
 Baseline live checks: all 22 HTML paths, robots, sitemap and CSS returned HTTP 200 on the apex domain; HTTP and legacy Pages URLs redirected to HTTPS apex. The www variant returned an upstream 503 and needs separate hosting/DNS investigation; no DNS or email settings were changed.
 
@@ -23,7 +23,7 @@ Browser acceptance and deployment must be verified for each release commit. Do n
 
 Mortgage, salary-raise, childcare and one-income pages now include original instructions, worked examples, methodology, limitations and live recalculation. Meal planner validation clears stale outputs and preserves grocery edits on budget-only changes. Travel recommendations work if the optional map library fails; the Swiss Alps representative Interlaken marker and contradictory affiliate disclosure are corrected, without changing the Expedia URL.
 
-Read-only live-browser checks on October 25 reproduced the three original meal-state bugs and verified the existing map/filter behavior. The corrected local code has not yet been browser-verified or deployed. Retailer links are not populated shopping carts; recipe ingredient counts are not yet measured shopping quantities.
+Read-only live-browser checks on October 25 reproduced the three original meal-state bugs and verified the existing map/filter behavior. The corrected local code has not yet been browser-verified or deployed. Retailer links are not populated shopping carts; nine original recipes now provide measured ingredients with scalable servings and editable/exportable quantities; costs remain illustrative and are not store quotes.
 
 ## Next priorities
 

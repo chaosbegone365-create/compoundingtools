@@ -1,0 +1,12 @@
+{
+  "name": "compound-your-future-quality",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test:browser": "playwright test",
+    "test:static": "node tests/script-syntax.cjs && node tests/calculator-regressions.cjs && node tests/comparison-unit.cjs && node tests/household-regressions.cjs && node tests/mortgage-content.cjs && node tests/travel-regressions.cjs && node tests/meal-quantities.cjs && node tests/meal-review.cjs && python3 tests/seo_static.py"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}
