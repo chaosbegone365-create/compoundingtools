@@ -28,6 +28,24 @@ test('school layout, semantic labels and actual keyboard access',async({page})=>
  const dimensions=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,width:document.documentElement.scrollWidth}));expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport+1);
  const escaped=await page.locator('.fields label').evaluateAll(labels=>labels.filter(label=>{const a=label.getBoundingClientRect(),b=label.querySelector('input').getBoundingClientRect();return b.left<a.left-1||b.right>a.right+1}).length);expect(escaped).toBe(0);
  const unlabeled=await page.locator('input').evaluateAll(inputs=>inputs.filter(i=>!i.labels?.length && !i.getAttribute('aria-label') && !i.getAttribute('aria-labelledby')).length);expect(unlabeled).toBe(0);
- const needed=new Set(['years','add-child','remove-child','s0-growth','s0-c0-tuition','reset','download']);const tabBound=await page.locator('a[href],button,input,select,textarea,summary,[tabindex]').count()+10;for(let i=0;i<tabBound&&needed.size;i++){await page.keyboard.press('Tab');const focus=await page.evaluate(()=>({id:document.activeElement.id,rect:(()=>{const r=document.activeElement.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right}})(),height:innerHeight,width:innerWidth}));if(needed.has(focus.id)){expect(focus.rect.bottom).toBeGreaterThan(0);expect(focus.rect.top).toBeLessThan(focus.height);expect(focus.rect.right).toBeGreaterThan(0);expect(focus.rect.left).toBeLessThan(focus.width);needed.delete(focus.id);}}
+ const needed=new Set(['years','add-child','remove-child','s0-growth','s0-c0-tuition','reset','download']);
+ const tabBound=await page.locator('a[href],button,input,select,textarea,summary,[tabindex]').count()+10;
+ for(let i=0;i<tabBound&&needed.size;i++){
+  await page.keyboard.press('Tab');
+  const id=await page.evaluate(()=>document.activeElement.id);
+  if(!needed.has(id))continue;
+  const control=page.locator('#'+id);
+  await expect(control).toBeFocused();
+  // Native Tab scrolling inherits the site's smooth-scroll behavior. Retry the
+  // same viewport conditions until scrolling settles; never force a scroll.
+  await expect.poll(async()=>control.evaluate(el=>{
+   const r=el.getBoundingClientRect();
+   return {focused:el===document.activeElement,bottomVisible:r.bottom>0,
+    topVisible:r.top<innerHeight,rightVisible:r.right>0,leftVisible:r.left<innerWidth};
+  }),{message:'Keyboard focus must reach visible control #'+id,timeout:5000}).toEqual({
+   focused:true,bottomVisible:true,topVisible:true,rightVisible:true,leftVisible:true
+  });
+  needed.delete(id);
+ }
  expect([...needed]).toEqual([]);
 });

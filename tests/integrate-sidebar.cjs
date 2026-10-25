@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { catalog } = require('../assets/tool-search.js');
-const groups = [ ['Money','Money & investing','money.html'], ['Career','Career & compensation','career.html'], ['Family','Family & education','family.html'], ['Travel','Travel & vacations','travel.html'], ['Health','Health & fitness','health.html'], ['Home','Home & renovation','home.html'] ];
+const groups = [ ['Travel','Vacations','travel.html'], ['Money','Investing','money.html'], ['Retirement','Retirement & Saving','retirement.html'], ['Career','Career & Compensation','career.html'], ['Family','Family & Parenting','family.html'], ['Home','Home & Big Purchases','home.html'], ['Health','Health & Fitness','health.html'] ];
 const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function render(page) {
   function link(href, label) {
@@ -13,6 +13,7 @@ function render(page) {
   }
   return `<!-- cyf-sidebar:start -->
 <div id="cyf-navigation-shell">
+<nav class="cyf-category-shortcuts" aria-label="Explore life categories">${groups.map(([,label,hub])=>link(hub,label)).join('')}</nav>
 <button id="cyf-menu-toggle" class="cyf-menu-toggle" type="button" aria-controls="cyf-sidebar" aria-expanded="false"><span aria-hidden="true">☰</span> Explore tools</button>
 <div class="cyf-nav-backdrop" hidden></div>
 <aside id="cyf-sidebar" aria-label="Explore Compound Your Future">
@@ -32,7 +33,8 @@ function integrate() {
   html=html.replace(/\n?<!-- cyf-sidebar:start -->[\s\S]*?<!-- cyf-sidebar:end -->\n?/g,'\n');
   html=html.replace(/\n?<link rel="stylesheet" href="assets\/site-sidebar.css">/g,'').replace(/\n?<script src="assets\/site-sidebar.js" defer><\/script>/g,'');
   html=html.replace(/\s*<\/head>/,'<link rel="stylesheet" href="assets/site-sidebar.css">\n<script src="assets/site-sidebar.js" defer></script>\n</head>');
-  html=html.replace(/(<body\b[^>]*>)\s*/i, (_, tag)=>tag+'\n'+render(file)+'\n');
+  if (!html.includes('</header>')) throw Error('Missing native header '+file);
+  html=html.replace(/<\/header>\s*/i, tag=>tag.trimEnd()+'\n'+render(file)+'\n');
   fs.writeFileSync(file,html);
  }
 }

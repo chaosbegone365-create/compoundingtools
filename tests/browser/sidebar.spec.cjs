@@ -2,10 +2,10 @@ const {test,expect}=require('@playwright/test');
 const fs=require('node:fs');
 const pages=fs.readdirSync('.').filter(f=>f.endsWith('.html'));
 test.beforeEach(async({page})=>{await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());});
-test('every page has six real categories and no horizontal overflow',async({page})=>{
+test('every page has seven real categories and no horizontal overflow',async({page})=>{
  test.setTimeout(120000);
  for(const path of pages){
-  await page.goto('/'+path);await expect(page.locator('#cyf-sidebar details')).toHaveCount(6);
+  await page.goto('/'+path);await expect(page.locator('#cyf-sidebar details')).toHaveCount(7);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),path).toBe(true);
   const inputs=page.locator('main input:not([type=hidden]),main select,main textarea');
   for(let i=0;i<await inputs.count();i++){
@@ -16,7 +16,7 @@ test('every page has six real categories and no horizontal overflow',async({page
 test('current tool is marked and category expanded',async({page})=>{
  await page.goto('/home-mortgage.html');
  await expect(page.locator('#cyf-sidebar a[aria-current=page]')).toHaveAttribute('href','home-mortgage.html');
- await expect(page.locator('#cyf-sidebar details').last()).toHaveAttribute('open','');
+ await expect(page.locator('#cyf-sidebar details').filter({has:page.locator('a[href="home-mortgage.html"]')})).toHaveAttribute('open','');
 });
 test('mobile drawer contains keyboard focus, cancels and restores scroll',async({page})=>{
  test.skip((page.viewportSize()).width>=1200,'drawer is mobile/tablet only');
@@ -35,7 +35,7 @@ test('mobile drawer contains keyboard focus, cancels and restores scroll',async(
 test('navigation, back and repeated open retain working document',async({page})=>{
  await page.goto('/index.html');const mobile=page.viewportSize().width<1200;
  if(mobile)await page.locator('#cyf-menu-toggle').click();
- await page.locator('#cyf-sidebar summary').filter({hasText:'Home & renovation'}).click();
+ await page.locator('#cyf-sidebar summary').filter({hasText:'Home & Big Purchases'}).click();
  await page.locator('#cyf-sidebar a[href="home-mortgage.html"]').click();await expect(page).toHaveURL(/home-mortgage.html$/);
  expect(await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');
  await page.goBack();await expect(page.locator('#cyf-menu-toggle')).toHaveAttribute('aria-expanded','false');

@@ -4,10 +4,10 @@
   const catalog = [
     ["school-costs", "Public vs private school costs", "Family", "family-school-costs.html", "Compare tuition, care and transport across school years using your own quotes.", "school education k12 public private tuition aftercare summer sibling children"],
     ["college-paths", "College pathway cost comparison", "Family", "family-college-paths.html", "Compare two-year, four-year and transfer scenarios using your own quotes and aid assumptions.", "college university education tuition public private in-state out-of-state two-year four-year 2+2 transfer scholarship grants"],
-    ["cash-goals", "Cash reserve and savings goal calculator", "Money", "money-cash-goals.html", "Model your chosen reserve and savings deadline with hypothetical APY, not an allocation recommendation.", "cash emergency fund reserve savings high yield savings HYSA brokerage savings vs investing APY goal deadline cash allocation"],
+    ["cash-goals", "Cash reserve and savings goal calculator", "Retirement", "money-cash-goals.html", "Model your chosen reserve and savings deadline with hypothetical APY, not an allocation recommendation.", "cash emergency fund reserve savings high yield savings HYSA brokerage savings vs investing APY goal deadline cash allocation"],
 
     ['growth', 'Compound growth calculator', 'Money', '#growth', 'Explore investment growth with regular contributions.', 'compound interest investing investment brokerage stocks millionaire future value'],
-    ['retirement', 'Retirement savings calculator', 'Money', '#retirement', 'Estimate the savings needed for your retirement goal.', 'retire pension ira 401k nest egg financial independence'],
+    ['retirement', 'Retirement savings calculator', 'Retirement', '#retirement', 'Estimate the savings needed for your retirement goal.', 'retire pension ira 401k nest egg financial independence'],
     ['bonus', 'Bonus calculator', 'Career', '#bonus', 'Estimate gross bonus compensation before taxes.', 'salary compensation incentive payout annual bonus'],
     ['options', 'Options profit calculator', 'Money', 'options.html', 'Model call and put outcomes at expiration, including risk and breakeven.', 'options investing option trading calls puts profit loss strike premium'],
     ['comparison', 'Investment performance comparison', 'Money', 'compare-performance.html', 'Explore the comparison tool and its data availability limitations.', 'benchmark beat the market portfolio performance etf returns'],

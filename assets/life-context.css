@@ -1,0 +1,8 @@
+/* Optional, isolated editorial band. Does not modify hero/search/calculator. */
+.cyf-life-context{box-sizing:border-box;max-width:1160px;margin:32px auto;padding:0 24px;display:grid;grid-template-columns:1fr minmax(240px,.85fr);gap:36px;align-items:center;color:#142B2A}
+.cyf-life-context h2{font:700 clamp(1.5rem,3vw,2.1rem)/1.2 Manrope,system-ui,sans-serif;letter-spacing:-.04em;margin:0 0 14px}
+.cyf-life-context p{font:400 1rem/1.7 "DM Sans",system-ui,sans-serif;color:#637572;max-width:48ch;margin:0}
+.cyf-life-context figure{margin:0;min-width:0}
+.cyf-life-context img{display:block;width:100%;height:auto;aspect-ratio:3/2;border-radius:18px;border:1px solid #E2EAE5;box-sizing:border-box}
+.cyf-life-context figcaption{font:400 .75rem/1.5 system-ui,sans-serif;color:#637572;margin-top:8px}
+@media(max-width:640px){.cyf-life-context{grid-template-columns:1fr;gap:20px;margin:24px auto;padding:0 22px}.cyf-life-context figure{max-width:480px}.cyf-life-context h2{font-size:1.6rem}}
