@@ -83,12 +83,12 @@ test('labels render as text and CSV sanitizes formula-prefixed labels with no pe
  expect(csv).toContain('"\'=HYPERLINK(""https://example.invalid"")"');expect(csv).toContain('"total USD","25753.20","29554.80","35807.20"');expect(csv).toContain('"Hard project cap USD","30000.00"');
  expect(new URL(page.url()).search).toBe('');expect(new URL(page.url()).hash).toBe('');expect(await page.evaluate(()=>({local:localStorage.length,session:sessionStorage.length}))).toEqual({local:0,session:0});
 });
-test('long allowed labels wrap, controls fit, keyboard order and draft restrictions remain',async({page})=>{
+test('long allowed labels wrap, controls fit, keyboard order and disclosure restrictions remain',async({page})=>{
  await page.locator('#b-name').fill('X'.repeat(80));
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  for(const id of ['budget','otherCosts','weight-durability','a-quantity','b-name','c-maintenance']){const box=await page.locator('#'+id).boundingBox();expect(box.width).toBeGreaterThan(60);expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(await page.evaluate(()=>innerWidth));}
  await page.locator('#budget').focus();await page.keyboard.press('Tab');await expect(page.locator('#otherCosts')).toBeFocused();
- await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
+ await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','index,follow');
  await expect(page.getByText('There are no purchase or affiliate links in this calculator.',{exact:false})).toBeVisible();
  await expect(page.locator('.renovation-quotes a[href^="http"]')).toHaveCount(0);
 });
@@ -99,12 +99,12 @@ test('page sharing is gesture-only, excludes inputs, and cancellation preserves 
  await page.evaluate(()=>Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{throw new DOMException('Canceled','AbortError')}}));
  await page.locator('[data-share-tool]').click();await expect(page.locator('[data-share-status]')).toContainText('canceled');await expect(page.locator('#budget')).toHaveValue('98765');await expect(page.locator('#b-name')).toHaveValue('Private quote');
 });
-test('after parent integration, search and Home hub reach the draft with current navigation',async({page})=>{
+test('after parent integration, search and Home hub reach the released tool with current navigation',async({page})=>{
  await page.goto('/');await page.locator('#site-search').fill('renovation quote');
  const link=page.locator('#tool-search-results a[href="home-renovation-quotes.html"]');await expect(link).toBeVisible();await link.click();
  await expect(page).toHaveURL(/home-renovation-quotes\.html$/);await expect(page.locator('#quote-outcome')).toContainText('B · Option B');
  await expect(page.locator('#cyf-sidebar a[aria-current="page"]')).toHaveAttribute('href','home-renovation-quotes.html');
  await expect(page.locator('#cyf-sidebar details').filter({has:page.locator('a[href="home-renovation-quotes.html"]')})).toHaveAttribute('open','');
  await page.goBack();await expect(page).toHaveURL(/\/$/);await page.goForward();await expect(page).toHaveURL(/home-renovation-quotes\.html$/);await expect(page.locator('#renovation-results')).toBeVisible();
- await page.goto('/home.html');await page.locator('a.tile[href="home-renovation-quotes.html"]').click();await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
+ await page.goto('/home.html');await page.locator('a.tile[href="home-renovation-quotes.html"]').click();await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','index,follow');
 });
