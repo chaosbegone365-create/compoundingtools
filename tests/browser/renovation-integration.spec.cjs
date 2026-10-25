@@ -12,10 +12,10 @@ async function expectReady(page){
  await expect(page.locator('#renovation-results')).toBeVisible();
  await expect(page.locator('#cyf-sidebar a[aria-current="page"]')).toHaveAttribute('href','home-renovation-quotes.html');
  await expect(page.locator('#cyf-sidebar details').filter({has:page.locator('a[href="home-renovation-quotes.html"]')})).toHaveAttribute('open','');
- await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
+ await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','index,follow');
  expect(await page.evaluate(()=>document.body.style.overflow)).not.toBe('hidden');
 }
-test('renovation search dismisses and reopens, keyboard enters draft, and history recovers',async({page})=>{
+test('renovation search dismisses and reopens, keyboard enters released tool, and history recovers',async({page})=>{
  await page.goto('/');const input=page.locator('#site-search');
  await input.fill('renovation quotes');
  await expect(page.locator('#tool-search-results a').first()).toHaveAttribute('href','home-renovation-quotes.html');
@@ -30,11 +30,11 @@ test('renovation search dismisses and reopens, keyboard enters draft, and histor
  await expect(page.locator('#quote-outcome')).toContainText('B · Option B');
  await expect(page.locator('#quote-rows tr')).toHaveCount(17);
 });
-test('Home hub preserves both renovation tools and returns to the draft repeatedly',async({page})=>{
+test('Home hub preserves both renovation tools and returns to the released tool repeatedly',async({page})=>{
  await page.goto('/home.html');
  const old=page.locator('.tiles a[href="home-renovation.html"]');const comparison=page.locator('.tiles a[href="home-renovation-quotes.html"]');
  await expect(old).toHaveCount(1);await expect(comparison).toHaveCount(1);
- await expect(comparison).toContainText('Draft:');await expect(comparison).toContainText('hard project budget');
+ await expect(comparison).not.toContainText('Draft:');await expect(comparison).toContainText('Compare your material quotes');await expect(comparison).toContainText('hard project budget');
  await old.click();await expect(page).toHaveURL(/home-renovation\.html$/);
  await page.goBack();await comparison.click();await expectReady(page);
  await page.locator('main > a[href="home.html"]').click();await expect(page).toHaveURL(/home\.html$/);

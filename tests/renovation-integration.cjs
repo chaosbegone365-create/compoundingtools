@@ -1,4 +1,4 @@
-/* Integrated catalog, navigation and draft-release boundaries; no browser/network. */
+/* Integrated catalog, navigation and release boundaries; no browser/network. */
 'use strict';
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -24,7 +24,7 @@ ok(catalog.some(t=>t.id==='renovation' && t.href==='home-renovation.html'),'exis
 const tiles=hub.match(/<div class="tiles">([\s\S]*?)<\/div><\/main>/)[1];
 ok((tiles.match(/href="home-renovation-quotes.html"/g)||[]).length===1,'single new hub tile');
 ok((tiles.match(/href="home-renovation.html"/g)||[]).length===1,'single existing hub tile');
-ok(tiles.includes('Draft: compare your material quotes and your own preference scores without relaxing your hard project budget.'),'hub states draft and hard cap');
+ok(tiles.includes('Compare your material quotes and your own preference scores without relaxing your hard project budget.'),'hub states comparison and hard cap');
 ok(tiles.indexOf('href="home-renovation.html"')<tiles.indexOf('href="'+route+'"'),'existing and new renovation tools adjacent in hub order');
 for(const page of fs.readdirSync('.').filter(f=>f.endsWith('.html'))){
  const content=fs.readFileSync(page,'utf8');
@@ -32,9 +32,10 @@ for(const page of fs.readdirSync('.').filter(f=>f.endsWith('.html'))){
  ok(block && block[0]===render(page),page+' navigation matches authoritative catalog exactly');
  ok((block[0].match(/href="home-renovation-quotes.html"/g)||[]).length===1,page+' one new sidebar link');
 }
-ok(html.includes('<meta name="robots" content="noindex,follow">'),'new tool remains noindex-follow');
-ok(html.includes('Draft calculator. Fictional examples, not retail prices or product ratings.'),'draft and fictional example disclosure');
-ok(!fs.readFileSync('sitemap.xml','utf8').includes(route),'draft not in sitemap');
+ok(html.includes('<meta name="robots" content="index,follow">'),'released tool remains index-follow');
+ok(html.includes('Fictional examples, not retail prices or product ratings.'),'fictional example disclosure');
+ok(fs.readFileSync('sitemap.xml','utf8').includes(route),'released tool in sitemap');
+ok(!html.includes('Draft calculator.') && !tiles.includes('Draft:'),'released tool has no draft labels');
 ok(html.includes('<link rel="canonical" href="https://compoundyourfuture.com/'+route+'">'),'one clean canonical route');
 ok(canonicalURL({querySelector:()=>({href:'https://compoundyourfuture.com/'+route+'?budget=98765#private'})})==='https://compoundyourfuture.com/'+route,'shared helper drops state from canonical');
 ok(html.includes('assets/share-tools.js') && html.includes('data-share-tool'),'shared gesture-only sharing asset wired');
@@ -48,4 +49,4 @@ for(const asset of ['assets/renovation-quotes-model.js','assets/renovation-quote
 }
 const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
 for(const test of ['tests/renovation-quotes.cjs','tests/renovation-integration.cjs'])ok(pkg.scripts['test:static'].split(' && ').filter(c=>c==='node '+test).length===1,test+' in aggregate once');
-console.log(`PASS: ${checks} renovation integration checks; draft/noindex, discovery, exact catalog navigation, clean sharing and scope boundaries.`);
+console.log(`PASS: ${checks} renovation integration checks; released indexing, discovery, exact catalog navigation, clean sharing and scope boundaries.`);
