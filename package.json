@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test:browser": "playwright test",
-    "test:static": "node tests/script-syntax.cjs && node tests/calculator-regressions.cjs && node tests/comparison-unit.cjs && node tests/household-regressions.cjs && node tests/mortgage-content.cjs && node tests/workout-regressions.cjs && node tests/travel-regressions.cjs && node tests/meal-quantities.cjs && node tests/meal-review.cjs && python3 tests/seo_static.py && node tests/school-costs.cjs && node tests/college-paths.cjs && node tests/cash-goals.cjs && node tests/search-sharing.cjs && node tests/sidebar.cjs && node tests/resource-guardrails.cjs && node tests/category-navigation.cjs && node tests/life-context.cjs"
+    "test:static": "node tests/script-syntax.cjs && node tests/calculator-regressions.cjs && node tests/comparison-unit.cjs && node tests/household-regressions.cjs && node tests/mortgage-content.cjs && node tests/workout-regressions.cjs && node tests/travel-regressions.cjs && node tests/trip-quotes.cjs && node tests/meal-quantities.cjs && node tests/meal-review.cjs && python3 tests/seo_static.py && node tests/school-costs.cjs && node tests/college-paths.cjs && node tests/cash-goals.cjs && node tests/search-sharing.cjs && node tests/sidebar.cjs && node tests/resource-guardrails.cjs && node tests/category-navigation.cjs && node tests/life-context.cjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1"

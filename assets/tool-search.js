@@ -14,6 +14,7 @@
     ['raise', 'Pay raise calculator', 'Career', 'career-raise.html', 'Compare a raise with inflation and changes in pay.', 'salary wage income job pay rise inflation'],
     ['childcare', 'Childcare cost calculator', 'Family', 'family-childcare.html', 'Compare childcare costs and household budget choices.', 'daycare nursery preschool child children care babysitter'],
     ['one-income', 'One-income household calculator', 'Family', 'family-one-income.html', 'Explore how moving to one income changes your household budget.', 'stay at home parent family work childcare career break'],
+    ["trip-quote-tradeoffs", "Trip quote comparison & hard-budget alternatives", "Travel", "travel-quote-tradeoffs.html", "Compare all-in trip quotes and explicitly chosen shorter alternatives against one hard budget.", "trip travel vacation holiday budget quote flight hotel airfare cheaper extra night shorter family beach hard budget all in accommodation alternatives"],
     ['travel-budget', 'Vacation budget calculator', 'Travel', 'travel-budget.html', 'Estimate trip costs and explore destinations.', 'travel holiday vacation flight hotel trip map destination'],
     ['travel-savings', 'Travel savings calculator', 'Travel', 'travel-savings.html', 'Plan monthly savings toward a trip.', 'travel vacation holiday sinking fund trip save'],
     ['fitness', 'Fitness cost comparison', 'Health', 'health-fitness.html', 'Compare gym, home workouts, and fitness classes.', 'gym exercise membership classes home fitness workout cost'],
