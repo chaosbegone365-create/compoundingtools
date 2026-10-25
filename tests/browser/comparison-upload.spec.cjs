@@ -1,6 +1,9 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs/promises');
 const ORIGIN = 'http://127.0.0.1:4173';
+// The shared stylesheet attempts this fixed, pre-existing font import. It is
+// aborted below, not an upload or provider request made by the calculator.
+const BLOCKED_FONT = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap';
 // Fictional prices only. These fixtures are never saved into the published dataset.
 const BUILTIN = { series:{ SPY:[['2025-01-02',100],['2025-01-03',105],['2025-01-06',110]] }, metadata:{SPY:{fetched_at:'2026-09-30T00:00:00Z',status:'cached'}} };
 const PORTFOLIO = 'date,value\n2025-01-08,10000\n2025-01-06,100\n2025-01-03,90\n2025-01-02,80\n2025-01-01,1000';
@@ -14,7 +17,8 @@ test.beforeEach(async ({ page, context }) => {
 });
 test.afterEach(async ()=>{
   expect(errors, 'No uncaught browser exceptions').toEqual([]);
-  expect(requests.every(request=>new URL(request.url).origin===ORIGIN && request.method==='GET' && request.body===null), 'Only local read-only site requests; no provider or upload requests').toBe(true);
+  const unexpected=requests.filter(request=>!(new URL(request.url).origin===ORIGIN || request.url===BLOCKED_FONT) || request.method!=='GET' || request.body!==null);
+  expect(unexpected, 'Only local read-only site requests or the exact aborted shared-font import; no provider/upload requests').toEqual([]);
 });
 async function upload(page, id, text, name='synthetic.csv') {
   await page.locator('#'+id).setInputFiles({name,mimeType:'text/csv',buffer:Buffer.from(text)});
