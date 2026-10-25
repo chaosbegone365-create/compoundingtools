@@ -33,3 +33,14 @@ Sources inspected:
 - https://playwright.dev/docs/test-webserver
 
 Concurrent-main reconciliation adds expanded all-in mortgage, fitness comparison, workout schedule and renovation initialization/invalid-state checks. Layout also checks controls stay within their field tracks. The 24 discovered cases still require an actual exact-commit CI run.
+
+## Local benchmark fallback coverage
+
+`comparison-upload.spec.cjs` adds seven scenarios per configured viewport for a
+user-provided benchmark CSV: absent/successful built-in datasets, independent
+intersection-based returns, actual canvas/download, invalid/repeated/oversized
+files, interrupted and superseded reads, reset/source switches, delayed built-in
+responses, reload clearing, private in-memory files and canonical-only sharing.
+All dataset responses are synthetic local intercepts; external/provider requests
+are blocked and attempts are asserted absent. Merely listing these tests does not
+establish a browser pass; run them in the authorized CI environment.
