@@ -1,0 +1,43 @@
+const {test,expect}=require('@playwright/test');
+const ORIGIN='http://127.0.0.1:4173';
+let errors;
+test.beforeEach(async({page,context})=>{
+ errors=[];page.on('pageerror',error=>errors.push(error.message));
+ await context.route('**/*',route=>new URL(route.request().url()).origin===ORIGIN?route.continue():route.abort());
+ await page.clock.install();
+});
+test.afterEach(()=>expect(errors).toEqual([]));
+test('destination rotation can be paused and resumed with keyboard without changing provider link',async({page})=>{
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.goto('/');
+ const board=page.locator('[data-destination-board]'),cities=board.locator('[data-dest]'),toggle=board.locator('[data-board-toggle]');
+ await expect(board).toContainText('Destination inspiration—not live flight departures or availability.');
+ await expect(board).toContainText('AFFILIATE LINK · WE MAY EARN A COMMISSION');
+ const link=board.getByRole('link',{name:'Explore trips on Expedia'});
+ await expect(link).toHaveAttribute('href','https://expedia.com/affiliate/3DafBAM');
+ await expect(link).toHaveAttribute('rel','sponsored noopener noreferrer');
+ const initial=await cities.allTextContents();
+ await page.clock.runFor(4500);
+ expect(await cities.allTextContents()).not.toEqual(initial);
+ await toggle.focus();await page.keyboard.press('Enter');
+ await expect(toggle).toHaveText('Resume destinations');
+ const paused=await cities.allTextContents();
+ await page.clock.runFor(10000);expect(await cities.allTextContents()).toEqual(paused);
+ await page.keyboard.press('Enter');await expect(toggle).toHaveText('Pause destinations');
+ await page.clock.runFor(4500);expect(await cities.allTextContents()).not.toEqual(paused);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ await expect(page.locator('#preview-value')).not.toBeEmpty();
+});
+test('reduced motion stops rotation, including live preference changes, and preserves manual pause',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/');
+ const cities=page.locator('[data-dest]'),toggle=page.locator('[data-board-toggle]');
+ const initial=await cities.allTextContents();
+ await expect(toggle).toBeDisabled();await expect(toggle).toContainText('reduced motion');
+ await page.clock.runFor(10000);expect(await cities.allTextContents()).toEqual(initial);
+ await page.emulateMedia({reducedMotion:'no-preference'});await expect(toggle).toBeEnabled();
+ await page.clock.runFor(4500);expect(await cities.allTextContents()).not.toEqual(initial);
+ await toggle.click();const paused=await cities.allTextContents();
+ await page.emulateMedia({reducedMotion:'reduce'});await expect(toggle).toBeDisabled();
+ await page.emulateMedia({reducedMotion:'no-preference'});await expect(toggle).toHaveText('Resume destinations');
+ await page.clock.runFor(10000);expect(await cities.allTextContents()).toEqual(paused);
+});
